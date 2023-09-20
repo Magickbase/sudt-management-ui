@@ -4,7 +4,7 @@ import { MainSection, SubSection } from "./components/section";
 import { Button } from "./components/button";
 import { Tabs } from "./components/tabs";
 import { NetworkSwitch } from "./components/network/NetworkSwitch";
-import { parseAmount } from "./utils";
+import { formatAmount } from "./utils";
 import { useState } from "react";
 
 const MOCK_ACCOUNT = {
@@ -26,7 +26,7 @@ export default function Home() {
       <MainSection>
         <div className="flex flex-col gap-4">
           <div className="text-center text-highlight-color text-2xl font-medium">
-            {parseAmount(account.balance, "8")} CKB
+            {formatAmount(account.balance, "8")} CKB
           </div>
 
           <NetworkSwitch />

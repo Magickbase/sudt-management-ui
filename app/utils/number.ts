@@ -4,14 +4,20 @@ export const parseAmount = (amount: string, decimal: string) => {
   try {
     const decimalInt = parseInt(decimal, 10);
     const amountBigInt = new BigNumber(amount);
-    const result = amountBigInt.dividedBy(new BigNumber(10).pow(decimalInt))
-    if (decimalInt > 20) {
-      return `${result.toFixed(20)}...`
-    }
-
-    return result.toFormat(decimalInt)
+    return amountBigInt.dividedBy(new BigNumber(10).pow(decimalInt))
   } catch (error) {
     console.error(error);
-    return "0";
+    return new BigNumber(0);
   }
 };
+
+export const formatAmount = (amount: string, decimal: string) => {
+  const decimalInt = parseInt(decimal, 10);
+  const amountBigNmber = parseAmount(amount, decimal)
+  if (decimalInt > 20) {
+    return `${amountBigNmber.toFixed(20)}...`
+  }
+
+  return amountBigNmber.toFormat(decimalInt)
+};
+

@@ -1,5 +1,5 @@
 import type { FC, DetailedHTMLProps, HTMLAttributes } from "react";
-import { parseAmount } from '@/app/utils'
+import { formatAmount } from '@/app/utils'
 
 interface AssetItemProps
   extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
@@ -22,7 +22,7 @@ export const AssetItem: FC<AssetItemProps> = ({
     } cursor-pointer w-full flex bg-lighter-color p-[12px] rounded-lg text-sm`}
   >
     <span>{asset.symbol}</span>
-    <span className="ml-auto mr-1">{parseAmount(asset.amount, asset.decimal)}</span>
+    <span className="ml-auto mr-1">{formatAmount(asset.amount, asset.decimal)}</span>
     <img src="/icons/more.svg" alt="more" />
   </div>
 );
