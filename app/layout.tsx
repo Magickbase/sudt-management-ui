@@ -2,6 +2,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { NetworkContextProvider } from "./hooks/useNetwork";
+import { AccountContextProvider } from "./hooks/useAccount";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,7 +20,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <NetworkContextProvider>
-        <body className={inter.className}>{children}</body>
+        <AccountContextProvider>
+          <body className={inter.className}>{children}</body>
+        </AccountContextProvider>
       </NetworkContextProvider>
     </html>
   );

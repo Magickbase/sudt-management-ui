@@ -3,20 +3,16 @@ import { AssetItem } from "./components/asset/AssetItem";
 import { MainSection, SubSection } from "./components/section";
 import { Button } from "./components/button";
 import { Tabs } from "./components/tabs";
+import { HistoryList } from "./components/history/HistoryList";
 import { NetworkSwitch } from "./components/network/NetworkSwitch";
 import { formatAmount } from "./utils";
 import { useState } from "react";
+import { useAccount } from "./hooks/useAccount";
 
-const MOCK_ACCOUNT = {
-  address:
-    "ckt1qzda0cr08m85hc8jlnfp3zer7xulejywt49kt2rr0vthywaa50xwsq0dnd72kh63g08574r38qkyph2ewl9ummcfp6znk",
-  balance: "48642877372524671",
-};
 
 export default function Home() {
   const [selectedIndex, setSelectedIndex] = useState(0);
-  // todo: change to real account
-  const account = MOCK_ACCOUNT;
+  const { account } = useAccount();
 
   return (
     <main className="flex min-h-screen flex-col items-center p-10">
@@ -78,7 +74,7 @@ export default function Home() {
               },
               {
                 label: "History",
-                children: <>Todo</>,
+                children: <HistoryList />,
               },
             ]}
             activeIndex={selectedIndex}
