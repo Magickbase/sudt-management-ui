@@ -1,10 +1,10 @@
 "use client";
-import { Tab } from "@headlessui/react";
 import { AssetItem } from "./components/asset/AssetItem";
 import { MainSection, SubSection } from "./components/section";
 import { Button } from "./components/button";
+import { Tabs } from "./components/tabs";
 import { NetworkSwitch } from "./components/network/NetworkSwitch";
-import { shannonToCkbDecimal } from "./utils";
+import { parseAmount } from "./utils";
 import { useState } from "react";
 
 const MOCK_ACCOUNT = {
@@ -25,13 +25,8 @@ export default function Home() {
       </SubSection>
       <MainSection>
         <div className="flex flex-col gap-4">
-
           <div className="text-center text-highlight-color text-2xl font-medium">
-            {shannonToCkbDecimal(
-              account.balance,
-              account.balance.length > 16 ? 2 : account.balance.length > 14 ? 4 : 8
-            )}{" "}
-            CKB
+            {parseAmount(account.balance, "8")} CKB
           </div>
 
           <NetworkSwitch />
@@ -52,32 +47,43 @@ export default function Home() {
           </div>
         </div>
 
-
         <div className="mt-12 bg-lighter-color rounded-lg">
-          <Tab.Group selectedIndex={selectedIndex} onChange={setSelectedIndex}>
-            <Tab.List className="p-4 border-b border-solid border-[#333333] flex justify-between">
-              <Tab>Assets</Tab>
-              <Tab>Tokens</Tab>
-              <Tab>History</Tab>
-            </Tab.List>
-
-            <Tab.Panels className="p-4">
-              <Tab.Panel>
-                <AssetItem
-                  asset={{ symbol: "CKB", amount: 1000, decimal: 0 }}
-                />
-              </Tab.Panel>
-              <Tab.Panel>
-                <h3 className="font-sm text-highlight-color mb-4">Autodetect Tokens</h3>
-                <p className="font-xs mb-4">
-                  We use third-party APIs to detect Tokens on CKB network, which
-                  means your IP address may be exposed to centralized servers.
-                </p>
-                <Button primary block>Turn On</Button>
-              </Tab.Panel>
-              <Tab.Panel>Todo</Tab.Panel>
-            </Tab.Panels>
-          </Tab.Group>
+          <Tabs
+            items={[
+              {
+                label: "Assets",
+                children: (
+                  <AssetItem
+                    asset={{ symbol: "CKB", amount: "1000", decimal: "0" }}
+                  />
+                ),
+              },
+              {
+                label: "Tokens",
+                children: (
+                  <>
+                    <h3 className="font-sm text-highlight-color mb-4">
+                      Autodetect Tokens
+                    </h3>
+                    <p className="font-xs mb-4">
+                      We use third-party APIs to detect Tokens on CKB network,
+                      which means your IP address may be exposed to centralized
+                      servers.
+                    </p>
+                    <Button primary block>
+                      Turn On
+                    </Button>
+                  </>
+                ),
+              },
+              {
+                label: "History",
+                children: <>Todo</>,
+              },
+            ]}
+            activeIndex={selectedIndex}
+            onChange={setSelectedIndex}
+          />
         </div>
       </MainSection>
     </main>
