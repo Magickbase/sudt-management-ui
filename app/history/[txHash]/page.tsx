@@ -1,8 +1,8 @@
 "use client";
-import { useState } from "react";
 import useSWR from "swr";
 import { useRouter } from "next/navigation";
 import { Toggle } from "@/app/components/switch";
+import { PageHeader } from "@/app/components/header";
 import classnames from "classnames";
 import { MOCK_TRANSACTION } from "@/app/mock";
 import { TransactionCellItem } from "@/app/components/transaction/TransactionCell";
@@ -35,14 +35,7 @@ export default function TransactionDetail({
 
   return (
     <>
-      <div
-        className="flex items-center mb-4 cursor-pointer text-highlight-color text-lg"
-        onClick={() => router.back()}
-      >
-        <img className="mr-2 h-3" src="/icons/back.svg" alt="back" />
-        <span>Transaction Details</span>
-      </div>
-
+      <PageHeader title="Transaction Details" />
       <div className="bg-lighter-color flex flex-col gap-4 rounded-md p-4">
         <div>
           <div className="flex items-center text-highlight-color font-medium mb-3">

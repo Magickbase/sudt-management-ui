@@ -39,3 +39,9 @@ export type Account = {
   balance: string;
 }
 
+export type Assets = {
+  amount: string
+  decimal: string
+  symbol: string
+}
+

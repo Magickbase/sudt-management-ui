@@ -1,11 +1,12 @@
 "use client";
+import { useState } from "react";
+import Link from "next/link";
 import { AssetItem } from "./components/asset/AssetItem";
 import { Button } from "./components/button";
 import { Tabs } from "./components/tabs";
 import { HistoryList } from "./components/history/HistoryList";
 import { NetworkSwitch } from "./components/network/NetworkSwitch";
 import { formatAmount } from "./utils";
-import { useState } from "react";
 import { useAccount } from "./hooks/useAccount";
 
 export default function Home() {
@@ -22,18 +23,18 @@ export default function Home() {
         <NetworkSwitch />
 
         <div className="flex justify-between px-4">
-          <button>
+          <Link className="flex flex-col items-center" href="/send">
             <img src="/icons/send.svg" alt="send" />
             <div className="font-medium text-highlight-color">Send</div>
-          </button>
+          </Link>          
           <button>
             <img src="/icons/receive.svg" alt="receive" />
             <div className="font-medium text-highlight-color">Receive</div>
           </button>
-          <button>
-            <img src="/icons/manage.svg" alt="manage" />
-            <div className="font-medium text-highlight-color">Manage</div>
-          </button>
+          <Link className="flex flex-col items-center" href="/create">
+            <img src="/icons/create.svg" alt="create" />
+            <div className="font-medium text-highlight-color">Create</div>
+          </Link>
         </div>
       </div>
 
