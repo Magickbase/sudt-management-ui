@@ -1,6 +1,6 @@
 import type { FC, DetailedHTMLProps, HTMLAttributes } from "react";
 import BigNumber from "bignumber.js";
-import moment from 'moment';
+import dayjs from 'dayjs';
 import classnames from 'classnames';
 import Link from "next/link";
 import {
@@ -97,7 +97,7 @@ export const HistoryItem: FC<HistoryItemProps> = ({
       {...attrs}
       className={`${
         className ?? ""
-      } w-full flex flex-col bg-lighter-color p-[12px] rounded-lg text-sm`}
+      } w-full flex flex-col bg-lighter-color p-3 rounded-lg text-sm`}
     >
       <div className="flex mb-2">
         <Link
@@ -108,7 +108,7 @@ export const HistoryItem: FC<HistoryItemProps> = ({
         </Link>
         <span className={classnames("ml-auto text-xs", { "text-orange-400": transaction.txStatus !== "committed" })}>
           {transaction.txStatus === "committed"
-            ? moment(parseInt(transaction.blockTimestamp || "0")).format('YYYY.MM.DD HH:MM:SS')
+            ? dayjs(parseInt(transaction.blockTimestamp || "0")).format('YYYY.MM.DD HH:MM:SS')
             : transaction.txStatus}
         </span>
       </div>

@@ -1,5 +1,6 @@
 import "./globals.css";
 import type { Metadata } from "next";
+import { MainSection, SubSection } from "./components/section";
 import { Inter } from "next/font/google";
 import { NetworkContextProvider } from "./hooks/useNetwork";
 import { AccountContextProvider } from "./hooks/useAccount";
@@ -21,7 +22,14 @@ export default function RootLayout({
     <html lang="en">
       <NetworkContextProvider>
         <AccountContextProvider>
-          <body className={inter.className}>{children}</body>
+          <body className={inter.className}>
+            <main className="flex min-h-screen flex-col items-center p-10">
+              <SubSection>
+                <div>SubSection</div>
+              </SubSection>
+              <MainSection>{children}</MainSection>
+            </main>
+          </body>
         </AccountContextProvider>
       </NetworkContextProvider>
     </html>
