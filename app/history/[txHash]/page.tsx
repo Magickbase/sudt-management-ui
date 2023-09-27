@@ -2,7 +2,7 @@
 import { useState } from "react";
 import useSWR from "swr";
 import { useRouter } from "next/navigation";
-import { Switch } from "@headlessui/react";
+import { Toggle } from "@/app/components/switch";
 import classnames from "classnames";
 import { MOCK_TRANSACTION } from "@/app/mock";
 import { TransactionCellItem } from "@/app/components/transaction/TransactionCell";
@@ -45,9 +45,9 @@ export default function TransactionDetail({
 
       <div className="bg-lighter-color flex flex-col gap-4 rounded-md p-4">
         <div>
-          <div className="text-highlight-color font-medium mb-3">
-            Input({tx.displayInputs.length})
-            <Switch />
+          <div className="flex items-center text-highlight-color font-medium mb-3">
+            <span className="mr-2">Input({tx.displayInputs.length})</span>
+            <Toggle />
           </div>
           <div className="bg-lighter-color flex flex-col gap-4 rounded-md p-4">
             {tx.displayInputs.map((cell, index) => (
@@ -57,9 +57,9 @@ export default function TransactionDetail({
         </div>
 
         <div>
-          <div className="text-highlight-color font-medium mb-3">
-            Output({tx.displayOutputs.length})
-            <Switch />
+          <div className="flex items-center text-highlight-color font-medium mb-3">
+            <span className="mr-2">Output({tx.displayOutputs.length})</span>
+            <Toggle />
           </div>
           <div className="bg-lighter-color flex flex-col rounded-md p-4">
             {tx.displayOutputs.map((cell, index) => (
