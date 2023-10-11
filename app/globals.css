@@ -32,6 +32,5 @@ button, input, input[type="submit"], input[type="reset"] {
   color: inherit;
   border: none;
   font: inherit;
-  cursor: pointer;
   outline: inherit;
 }

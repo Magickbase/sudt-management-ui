@@ -45,3 +45,12 @@ export type Assets = {
   symbol: string
 }
 
+export type Token = {
+  symbol: string;
+  decimal: string;
+  name: string;
+  email: string;
+  description: string;
+  website: string;
+}
+

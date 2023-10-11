@@ -1,4 +1,4 @@
-import type { Transaction, Account, Assets } from "./type";
+import type { Transaction, Account, Assets, Token } from "./type";
 
 export const MOCK_ACCOUNTS: { [namke: string]: Account } = {
   self: {
@@ -38,6 +38,33 @@ export const MOCK_ASSETS: Assets[] = [
     symbol: "SUDT3",
     decimal: "8",
     amount: "30000000000",
+  }
+]
+
+export const MOCK_TOKENS: Token[] = [
+  {
+    symbol: "SUDT1",
+    decimal: "8",
+    name: "Demo Simple User Define Token",
+    email: "123@gmail.com",
+    description: "",
+    website: "",
+  },
+  {
+    symbol: "SUDT2",
+    decimal: "8",
+    name: "Demo Simple User Define Token",
+    email: "123@gmail.com",
+    description: "",
+    website: "",
+  },
+  {
+    symbol: "SUDT3",
+    decimal: "8",
+    name: "Demo Simple User Define Token",
+    email: "123@gmail.com",
+    description: "",
+    website: "",
   }
 ]
 

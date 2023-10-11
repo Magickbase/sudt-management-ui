@@ -1,51 +1,47 @@
 import { useForm } from "react-hook-form";
 import { Button } from "@/app/components/button";
 import { Input } from "@/app/components/input";
+import { Token } from "@/app/type";
 
-type FormData = {
-  symbol: string;
-  name: string;
-  email: string;
-  decimal: string;
-  description: string;
-  website: string;
-};
-
-interface CreateFormProps {
-  onSubmit: (data: FormData) => void;
+interface TokenInfomationFormProps {
+  token?: Token;
+  onSubmit?: (data: Token) => void;
+  readonly?: boolean;
 }
 
-export function CreateForm(props: CreateFormProps) {
+export function TokenInfomationForm({
+  token,
+  onSubmit = () => {},
+  readonly = false,
+}: TokenInfomationFormProps) {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormData>();
+  } = useForm<Token>({ defaultValues: token });
 
   return (
-    <form
-      className="flex flex-col gap-4"
-      onSubmit={handleSubmit(props.onSubmit)}
-    >
+    <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
       <div className="bg-lighter-color p-4 rounded-xl flex flex-col gap-4">
         <div className="flex flex-col">
           <label>Symbol</label>
-          <Input {...register("symbol")} error={errors.symbol !== undefined} />
+          <Input disabled={readonly} {...register("symbol")} error={errors.symbol !== undefined} />
         </div>
 
         <div className="flex flex-col">
           <label>Name</label>
-          <Input {...register("name")} error={errors.name !== undefined} />
+          <Input disabled={readonly} {...register("name")} error={errors.name !== undefined} />
         </div>
 
         <div className="flex flex-col">
           <label>Creator Email</label>
-          <Input {...register("email")} error={errors.email !== undefined} />
+          <Input disabled={readonly} {...register("email")} error={errors.email !== undefined} />
         </div>
 
         <div className="flex flex-col">
           <label>Decimal</label>
           <Input
+            disabled={readonly}
             {...register("decimal")}
             error={errors.decimal !== undefined}
           />
@@ -54,6 +50,7 @@ export function CreateForm(props: CreateFormProps) {
         <div className="flex flex-col">
           <label>Description</label>
           <Input
+            disabled={readonly}
             {...register("description")}
             error={errors.description !== undefined}
           />
@@ -62,15 +59,18 @@ export function CreateForm(props: CreateFormProps) {
         <div className="flex flex-col">
           <label>Website</label>
           <Input
+            disabled={readonly}
             {...register("website")}
             error={errors.website !== undefined}
           />
         </div>
       </div>
 
-      <Button primary type="submit">
-        Confirm
-      </Button>
+      {!readonly && (
+        <Button primary type="submit">
+          Confirm
+        </Button>
+      )}
     </form>
   );
 }

@@ -15,8 +15,10 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
       {...attrs}
       ref={ref}
       className={classnames(
-        `bg-transparent border-solid border-[1px] border-rim-color rounded-lg p-3 active:border-primary-color focus:border-primary-color transition-all text-sm`,
+        `rounded-lg p-3 transition-all text-sm`,
         { ['border-red-400']: error },
+        { ['bg-transparent border-solid border-[1px] border-rim-color active:border-primary-color focus:border-primary-color']: !attrs.disabled },
+        { ['bg-lighter-color']: attrs.disabled },
         className,
       )}
     />

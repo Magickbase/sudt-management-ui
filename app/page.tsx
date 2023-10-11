@@ -5,6 +5,7 @@ import { AssetItem } from "./components/asset/AssetItem";
 import { Button } from "./components/button";
 import { Tabs } from "./components/tabs";
 import { HistoryList } from "./components/history/HistoryList";
+import { TokenPanel } from "./components/token/TokenPanel";
 import { NetworkSwitch } from "./components/network/NetworkSwitch";
 import { formatAmount } from "./utils";
 import { useAccount } from "./hooks/useAccount";
@@ -51,21 +52,7 @@ export default function Home() {
             },
             {
               label: "Tokens",
-              children: (
-                <>
-                  <h3 className="font-sm text-highlight-color mb-4">
-                    Autodetect Tokens
-                  </h3>
-                  <p className="font-xs mb-4">
-                    We use third-party APIs to detect Tokens on CKB network,
-                    which means your IP address may be exposed to centralized
-                    servers.
-                  </p>
-                  <Button primary block>
-                    Turn On
-                  </Button>
-                </>
-              ),
+              children: <TokenPanel />,
             },
             {
               label: "History",
