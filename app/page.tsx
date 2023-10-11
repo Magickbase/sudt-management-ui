@@ -26,7 +26,7 @@ export default function Home() {
           <Link className="flex flex-col items-center" href="/send">
             <img src="/icons/send.svg" alt="send" />
             <div className="font-medium text-highlight-color">Send</div>
-          </Link>          
+          </Link>
           <button>
             <img src="/icons/receive.svg" alt="receive" />
             <div className="font-medium text-highlight-color">Receive</div>
