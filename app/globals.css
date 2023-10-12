@@ -6,10 +6,11 @@
   --foreground-rgb: 255, 255, 255;
   --primary-color: #0057ff;
   --lighter-color: #ffffff11;
+  --rim-color: #333333;
 
   --highlight-color: rgba(var(--foreground-rgb), 1);
   --text-color: rgba(var(--foreground-rgb), 0.8);
-  --secondary-color: rgba(var(--foreground-rgb), 0.65);
+  --secondary-color: rgba(153, 153, 153, 1);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -24,9 +25,12 @@ body {
 }
 
 button, input[type="submit"], input[type="reset"] {
-	color: inherit;
-	border: none;
-	font: inherit;
-	cursor: pointer;
-	outline: inherit;
+  cursor: pointer;
+}
+
+button, input, input[type="submit"], input[type="reset"] {
+  color: inherit;
+  border: none;
+  font: inherit;
+  outline: inherit;
 }
