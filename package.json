@@ -17,7 +17,7 @@
     "bignumber.js": "9.1.2",
     "classnames": "2.3.2",
     "dayjs": "1.11.10",
-    "eslint": "8.49.0",
+    "eslint": "8.51.0",
     "eslint-config-next": "13.5.4",
     "next": "13.5.4",
     "postcss": "8.4.31",
