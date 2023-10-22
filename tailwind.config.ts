@@ -13,7 +13,9 @@ const config: Config = {
         'secondary-color': 'var(--secondary-color)',
         'lighter-color': 'var(--lighter-color)',
         'highlight-color': 'var(--highlight-color)',
-        'rim-color': 'var(--rim-color)'
+        'rim-color': 'var(--rim-color)',
+        alert: 'var(--alert-color)',
+        'dimmed-color': 'var(--dimmed-color)',
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
