@@ -1,25 +1,28 @@
-"use client";
-import { useState } from "react";
-import Link from "next/link";
-import { AssetItem } from "./components/asset/AssetItem";
-import { Button } from "./components/button";
-import { Tabs } from "./components/tabs";
-import { HistoryList } from "./components/history/HistoryList";
-import { TokenPanel } from "./components/token/TokenPanel";
-import { NetworkSwitch } from "./components/network/NetworkSwitch";
-import { formatAmount } from "./utils";
-import { useAccount } from "./hooks/useAccount";
+'use client'
+import { useState } from 'react';
+import Link from 'next/link';
+import { AssetItem } from './components/asset/AssetItem';
+import { Button } from './components/button';
+import { Tabs } from './components/tabs';
+import { HistoryList } from './components/history/HistoryList';
+import { TokenPanel } from './components/token/TokenPanel';
+import { NetworkSwitch } from './components/network/NetworkSwitch';
+import { ConnectAccount } from './components/connect-account';
+import { useAccount } from './hooks/useAccount';
+import { formatAmount } from './utils';
 
 export default function Home() {
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const { account } = useAccount();
+  const [selectedIndex, setSelectedIndex] = useState(0)
+  const account = useAccount()
+
+  if (!account.isConnected) {
+    return <ConnectAccount />
+  }
 
   return (
     <>
       <div className="flex flex-col gap-4">
-        <div className="text-center text-highlight-color text-2xl font-medium">
-          {formatAmount(account.balance, "8")} CKB
-        </div>
+        <div className="text-center text-highlight-color text-2xl font-medium">{formatAmount('1', '8')} CKB</div>
 
         <NetworkSwitch />
 
@@ -43,19 +46,15 @@ export default function Home() {
         <Tabs
           items={[
             {
-              label: "Assets",
-              children: (
-                <AssetItem
-                  asset={{ symbol: "CKB", amount: "1000", decimal: "0" }}
-                />
-              ),
+              label: 'Assets',
+              children: <AssetItem asset={{ symbol: 'CKB', amount: '1000', decimal: '0' }} />,
             },
             {
-              label: "Tokens",
+              label: 'Tokens',
               children: <TokenPanel />,
             },
             {
-              label: "History",
+              label: 'History',
               children: <HistoryList />,
             },
           ]}
@@ -64,5 +63,5 @@ export default function Home() {
         />
       </div>
     </>
-  );
+  )
 }

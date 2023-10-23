@@ -34,11 +34,6 @@ export const TYPE_LABEL_MAP = {
   mint: "Mint to",
 };
 
-export type Account = {
-  address: string;
-  balance: string;
-}
-
 export type Assets = {
   amount: string
   decimal: string
@@ -54,3 +49,48 @@ export type Token = {
   website: string;
 }
 
+export namespace WalletConnect {
+  export interface AddressItem {
+    address: string
+    identifier: string
+    description: string
+    index: number
+  }
+
+  export enum Events {
+    AccountChanged = 'accountChanged',
+    AddressesChagned = 'addressesChagned',
+    ChainChanged = 'chainChanged',
+  }
+
+  export interface Account {
+    accounts: Array<string>
+    chains: Array<`ckb:${'testnet' | 'devnet'}`>
+    events: [Events.AccountChanged, Events.AddressesChagned, Events.ChainChanged]
+    methods: ['ckb_getAddresses', 'ckb_signTransaction', 'ckb_signMessage']
+    topic: string
+  }
+
+  // TODO: can be introduced from SDK
+  export interface Transaction {
+    cellDeps: Array<any>
+    headerDeps: Array<any>
+    inputs: Array<any>
+    outputs: Array<any>
+    description: string
+    version: '0'
+    fee: string
+    outputsData: Array<string>
+  }
+
+  // TODO can be introduced from SDK
+  export interface SignedTransaction {
+    transaction: Transaction & {
+      witnesses: string[]
+      signatures: {
+        [hash: string]: Array<string>
+      }
+    }
+    status: string
+  }
+}
