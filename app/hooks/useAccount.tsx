@@ -4,7 +4,7 @@ import { useState, useContext, createContext, useMemo, useEffect } from 'react'
 import UniversalProvider from '@walletconnect/universal-provider'
 import { Web3Modal } from '@web3modal/standalone'
 import { WalletConnect } from '@/app/type'
-import { WC_ID } from '../utils'
+import { WC_ID, CODE_HASH_LIST } from '../utils'
 
 const CHAIN_ID = 'ckb:testnet'
 // TODO: use omnilock once neuron is ready
@@ -96,7 +96,6 @@ export const AccountContextProvider = ({ children }: { children: React.ReactNode
   }
 
   const connect = async () => {
-    const CODE_HASH_LIST = ['0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8']
     if (!provider) {
       throw new Error('Provider is not found')
     }
