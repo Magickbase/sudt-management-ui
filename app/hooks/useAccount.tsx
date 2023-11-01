@@ -8,7 +8,8 @@ import { WC_ID, CODE_HASH_LIST } from '../utils'
 
 const CHAIN_ID = 'ckb:testnet'
 // TODO: use omnilock once neuron is ready
-const LOCK_SCRIPT_CODE_HASH = '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8'
+const LOCK_SCRIPT_CODE_HASH =
+  '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8'
 
 export const AccountContext = createContext<{
   id: string | null
@@ -19,7 +20,7 @@ export const AccountContext = createContext<{
   updateAddresses: () => Promise<Array<WalletConnect.AddressItem>>
   signTransaction: (
     transaction: WalletConnect.Transaction,
-    description?: string
+    description?: string,
   ) => Promise<WalletConnect.SignedTransaction | undefined>
 }>({
   id: null,
@@ -37,10 +38,16 @@ export const useAccount = () => {
   return ctx
 }
 
-export const AccountContextProvider = ({ children }: { children: React.ReactNode }) => {
+export const AccountContextProvider = ({
+  children,
+}: {
+  children: React.ReactNode
+}) => {
   const [provider, setProvider] = useState<UniversalProvider | null>(null)
   const [account, setAccount] = useState<WalletConnect.Account | null>(null)
-  const [addressList, setAddressList] = useState<Array<WalletConnect.AddressItem>>([])
+  const [addressList, setAddressList] = useState<
+    Array<WalletConnect.AddressItem>
+  >([])
 
   const primaryAccount = account?.accounts[0]
 
@@ -70,7 +77,9 @@ export const AccountContextProvider = ({ children }: { children: React.ReactNode
       return addressList
     }
     try {
-      const result = await provider.client.request<Record<string, Array<WalletConnect.AddressItem>>>({
+      const result = await provider.client.request<
+        Record<string, Array<WalletConnect.AddressItem>>
+      >({
         topic: account.topic,
         chainId,
         request: {
@@ -111,7 +120,10 @@ export const AccountContextProvider = ({ children }: { children: React.ReactNode
 
     if (session) {
       web3Modal.closeModal()
-      setAccount({ ...(session.namespaces.ckb as WalletConnect.Account), topic: session.topic })
+      setAccount({
+        ...(session.namespaces.ckb as WalletConnect.Account),
+        topic: session.topic,
+      })
       window.onbeforeunload = () => {
         window.alert('hwl')
         provider.client.disconnect({
@@ -138,21 +150,25 @@ export const AccountContextProvider = ({ children }: { children: React.ReactNode
       .then(resetAccount)
   }
 
-  const signTransaction = async (transaction: WalletConnect.Transaction, description?: string) => {
+  const signTransaction = async (
+    transaction: WalletConnect.Transaction,
+    description?: string,
+  ) => {
     if (!account || !chainId || !provider) return
     try {
-      const res = await provider.client.request<WalletConnect.SignedTransaction>({
-        topic: account.topic,
-        chainId,
-        request: {
-          method: 'ckb_signTransaction',
-          params: {
-            transaction,
-            actionType: 'sign',
-            description,
+      const res =
+        await provider.client.request<WalletConnect.SignedTransaction>({
+          topic: account.topic,
+          chainId,
+          request: {
+            method: 'ckb_signTransaction',
+            params: {
+              transaction,
+              actionType: 'sign',
+              description,
+            },
           },
-        },
-      })
+        })
       return res
     } catch (e) {
       console.error(`Failed to sign a transaction: ${e}`)
@@ -185,8 +201,14 @@ export const AccountContextProvider = ({ children }: { children: React.ReactNode
     provider.on(WalletConnect.Events.AccountChanged, handleAccountChanged)
     provider.on(WalletConnect.Events.AddressesChagned, handleAddressesChanged)
     return () => {
-      provider.removeListener(WalletConnect.Events.AccountChanged, handleAccountChanged)
-      provider.removeListener(WalletConnect.Events.AddressesChagned, handleAddressesChanged)
+      provider.removeListener(
+        WalletConnect.Events.AccountChanged,
+        handleAccountChanged,
+      )
+      provider.removeListener(
+        WalletConnect.Events.AddressesChagned,
+        handleAddressesChanged,
+      )
     }
   }, [provider])
 

@@ -3,18 +3,18 @@ import {
   type DetailedHTMLProps,
   type HTMLAttributes,
   useState,
-} from "react";
-import { TokenItem } from "./TokenItem";
-import { Toggle } from "@/app/components/switch";
-import { Button } from "@/app/components/button";
-import { MOCK_TOKENS } from "@/app/mock";
+} from 'react'
+import { TokenItem } from './TokenItem'
+import { Toggle } from '@/app/components/switch'
+import { Button } from '@/app/components/button'
+import { MOCK_TOKENS } from '@/app/mock'
 
 interface TokenPanelProps
   extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {}
 
 export const TokenPanel: FC<TokenPanelProps> = ({ ...attrs }) => {
-  const [autodetect, setAutodetect] = useState(false);
-  const tokens = MOCK_TOKENS;
+  const [autodetect, setAutodetect] = useState(false)
+  const tokens = MOCK_TOKENS
   if (autodetect) {
     return (
       <div {...attrs}>
@@ -29,7 +29,7 @@ export const TokenPanel: FC<TokenPanelProps> = ({ ...attrs }) => {
           <Toggle className="ml-auto" enabled={autodetect} />
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -43,5 +43,5 @@ export const TokenPanel: FC<TokenPanelProps> = ({ ...attrs }) => {
         Turn On
       </Button>
     </div>
-  );
-};
+  )
+}

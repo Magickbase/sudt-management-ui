@@ -1,6 +1,6 @@
-"use client";
-import { PageHeader } from "@/app/components/header";
-import { TokenInfomationForm } from "@/app/components/token/TokenInfomationForm";
+'use client'
+import { PageHeader } from '@/app/components/header'
+import { TokenInfomationForm } from '@/app/components/token/TokenInfomationForm'
 
 export default function CreatePage({}: {}) {
   return (
@@ -8,5 +8,5 @@ export default function CreatePage({}: {}) {
       <PageHeader title="Create UDT" />
       <TokenInfomationForm onSubmit={(data) => console.log(data)} />
     </>
-  );
+  )
 }

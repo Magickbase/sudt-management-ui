@@ -2,7 +2,10 @@ import { Dialog, Transition } from '@headlessui/react'
 import { type FC, type ReactElement, Fragment, useState } from 'react'
 import { Button as PrimaryButton } from '../button'
 
-export const MyDialog: FC<{ title: string; description: string | ReactElement }> = ({ title, description }) => {
+export const MyDialog: FC<{
+  title: string
+  description: string | ReactElement
+}> = ({ title, description }) => {
   let [isOpen, setIsOpen] = useState(true)
 
   function handleDismiss() {
@@ -51,15 +54,22 @@ export const MyDialog: FC<{ title: string; description: string | ReactElement }>
                 leaveTo="opacity-0 scale-95"
               >
                 <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl text-white bg-black p-6 text-left align-middle shadow-xl transition-all">
-                  <Dialog.Title as="h3" className="text-lg text-white font-medium leading-6 mb-2 text-center">
+                  <Dialog.Title
+                    as="h3"
+                    className="text-lg text-white font-medium leading-6 mb-2 text-center"
+                  >
                     {title}
                   </Dialog.Title>
                   <div className="mt-2">
-                    <p className="text-sm leading-7 text-[#ccc]">{description}</p>
+                    <p className="text-sm leading-7 text-[#ccc]">
+                      {description}
+                    </p>
                   </div>
 
                   <div className="mt-4">
-                    <PrimaryButton onClick={handleDismiss}>Cancel</PrimaryButton>
+                    <PrimaryButton onClick={handleDismiss}>
+                      Cancel
+                    </PrimaryButton>
                   </div>
                   <button>
                     <img

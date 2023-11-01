@@ -26,11 +26,16 @@ body {
   background: #000;
 }
 
-button, input[type="submit"], input[type="reset"] {
+button,
+input[type='submit'],
+input[type='reset'] {
   cursor: pointer;
 }
 
-button, input, input[type="submit"], input[type="reset"] {
+button,
+input,
+input[type='submit'],
+input[type='reset'] {
   color: inherit;
   border: none;
   font: inherit;

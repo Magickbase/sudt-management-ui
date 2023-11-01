@@ -1,19 +1,19 @@
-"use client";
-import { useState, useContext, createContext } from "react";
-import { Token } from "../type";
+'use client'
+import { useState, useContext, createContext } from 'react'
+import { Token } from '../type'
 
 export interface ITokenContext {
-  token: Token;
+  token: Token
 }
 
-export const TokenContext = createContext<ITokenContext | undefined>(undefined);
+export const TokenContext = createContext<ITokenContext | undefined>(undefined)
 
 export const useToken = () => {
-  const context = useContext(TokenContext);
+  const context = useContext(TokenContext)
   if (!context)
-    throw new Error("No TokenContext.Provider found when calling useToken.");
-  return context;
-};
+    throw new Error('No TokenContext.Provider found when calling useToken.')
+  return context
+}
 
 export const TokenContextProvider = ({
   token,
@@ -27,5 +27,5 @@ export const TokenContextProvider = ({
     >
       {children}
     </TokenContext.Provider>
-  );
-};
+  )
+}
