@@ -21,7 +21,8 @@ export const HistoryItem: FC<HistoryItemProps> = ({
   className,
   ...attrs
 }) => {
-  const { account } = useAccount();
+  const { addressList } = useAccount();
+  const primaryAddress = addressList[0]?.address
 
   const displayCells =
     transaction.type === "from"
@@ -33,10 +34,10 @@ export const HistoryItem: FC<HistoryItemProps> = ({
     udts: { symbol: string; amount: string }[];
   } = (() => {
     const selfInputs = transaction.displayInputs.filter(
-      (cell) => cell.addressHash === account.address
+      (cell) => cell.addressHash === primaryAddress
     );
     const selfOutputs = transaction.displayOutputs.filter(
-      (cell) => cell.addressHash === account.address
+      (cell) => cell.addressHash === primaryAddress
     );
 
     const ckbInputAmount = selfInputs.reduce((a, b) => {

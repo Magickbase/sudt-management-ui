@@ -1,6 +1,6 @@
 import { Dialog, Transition } from '@headlessui/react'
 import { type FC, type ReactElement, Fragment, useState } from 'react'
-import { PrimaryButton } from '../button'
+import { Button as PrimaryButton } from '../button'
 
 export const MyDialog: FC<{ title: string; description: string | ReactElement }> = ({ title, description }) => {
   let [isOpen, setIsOpen] = useState(true)

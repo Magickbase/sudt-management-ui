@@ -1,6 +1,6 @@
-import type { Transaction, Account, Assets, Token } from "./type";
+import type { Transaction, Assets, Token } from "./type";
 
-export const MOCK_ACCOUNTS: { [namke: string]: Account } = {
+export const MOCK_ACCOUNTS: { [namke: string]: Record<'address' | 'balance', string>  } = {
   self: {
     address:
       "ckt1qzda0cr08m85hc8jlnfp3zer7xulejywt49kt2rr0vthywaa50xwsq0dnd72kh63g08574r38qkyph2ewl9ummcfp6znk",
