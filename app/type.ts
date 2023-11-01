@@ -1,38 +1,38 @@
 export type TransactionNormalCell = {
-  cellType: "normal";
-  addressHash: string;
-  capacity: string;
-};
+  cellType: 'normal'
+  addressHash: string
+  capacity: string
+}
 
 export type UdtInfo = {
-  amount: string;
-  decimal: string;
-  symbol: string;
-};
+  amount: string
+  decimal: string
+  symbol: string
+}
 
 export type TransactionUdtCell = {
-  cellType: "udt";
-  addressHash: string;
-  capacity: string;
-  extraInfo: UdtInfo;
-};
+  cellType: 'udt'
+  addressHash: string
+  capacity: string
+  extraInfo: UdtInfo
+}
 
-export type TransactionCell = TransactionNormalCell | TransactionUdtCell;
+export type TransactionCell = TransactionNormalCell | TransactionUdtCell
 
 export interface Transaction {
-  type: "from" | "to" | "mint"; // for mock, todo: after migrate to api, the type is calculated based on the inputs and outputs
-  txHash: string;
-  blockTimestamp?: string;
-  txStatus: "committed" | "pending" | "proposed";
-  displayInputs: TransactionCell[];
-  displayOutputs: TransactionCell[];
+  type: 'from' | 'to' | 'mint' // for mock, todo: after migrate to api, the type is calculated based on the inputs and outputs
+  txHash: string
+  blockTimestamp?: string
+  txStatus: 'committed' | 'pending' | 'proposed'
+  displayInputs: TransactionCell[]
+  displayOutputs: TransactionCell[]
 }
 
 export const TYPE_LABEL_MAP = {
-  from: "From",
-  to: "To",
-  mint: "Mint to",
-};
+  from: 'From',
+  to: 'To',
+  mint: 'Mint to',
+}
 
 export type Assets = {
   amount: string
@@ -41,12 +41,12 @@ export type Assets = {
 }
 
 export type Token = {
-  symbol: string;
-  decimal: string;
-  name: string;
-  email: string;
-  description: string;
-  website: string;
+  symbol: string
+  decimal: string
+  name: string
+  email: string
+  description: string
+  website: string
 }
 
 export namespace WalletConnect {
@@ -66,7 +66,11 @@ export namespace WalletConnect {
   export interface Account {
     accounts: Array<string>
     chains: Array<`ckb:${'testnet' | 'devnet'}`>
-    events: [Events.AccountChanged, Events.AddressesChagned, Events.ChainChanged]
+    events: [
+      Events.AccountChanged,
+      Events.AddressesChagned,
+      Events.ChainChanged,
+    ]
     methods: ['ckb_getAddresses', 'ckb_signTransaction', 'ckb_signMessage']
     topic: string
   }

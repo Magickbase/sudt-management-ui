@@ -1,33 +1,33 @@
-import useSWR from "swr";
-import { useForm, Controller } from "react-hook-form";
-import { Button } from "@/app/components/button";
-import { Input } from "@/app/components/input";
-import { Select } from "@/app/components/select";
-import { MOCK_ASSETS } from "@/app/mock";
+import useSWR from 'swr'
+import { useForm, Controller } from 'react-hook-form'
+import { Button } from '@/app/components/button'
+import { Input } from '@/app/components/input'
+import { Select } from '@/app/components/select'
+import { MOCK_ASSETS } from '@/app/mock'
 
-import { useState } from "react";
+import { useState } from 'react'
 
 async function fetchAssets() {
   return [
     {
-      label: "CKB",
-      key: "CKB",
+      label: 'CKB',
+      key: 'CKB',
     },
     ...MOCK_ASSETS.map((asset) => ({
       label: asset.symbol,
       key: asset.symbol,
     })),
-  ];
+  ]
 }
 
 type FormData = {
-  token: string;
-  amount: string;
-  to: string;
-};
+  token: string
+  amount: string
+  to: string
+}
 
 interface SendFormProps {
-  onSubmit: (data: FormData) => void;
+  onSubmit: (data: FormData) => void
 }
 
 export function SendForm(props: SendFormProps) {
@@ -36,9 +36,9 @@ export function SendForm(props: SendFormProps) {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<FormData>();
+  } = useForm<FormData>()
 
-  const { data: assets } = useSWR(["assets"], () => fetchAssets());
+  const { data: assets } = useSWR(['assets'], () => fetchAssets())
 
   return (
     <form
@@ -59,7 +59,10 @@ export function SendForm(props: SendFormProps) {
 
         <div className="flex flex-col">
           <label>Amount</label>
-          <Input {...register("amount", { required: true })} error={errors.amount !== undefined} />
+          <Input
+            {...register('amount', { required: true })}
+            error={errors.amount !== undefined}
+          />
           {errors.amount && <p>amount is required.</p>}
         </div>
 
@@ -67,7 +70,7 @@ export function SendForm(props: SendFormProps) {
           <label>To</label>
           <Input
             placeholder="ckb...."
-            {...register("to", { required: true })}
+            {...register('to', { required: true })}
             error={errors.amount !== undefined}
           />
           {errors.to && <p>to is required.</p>}
@@ -78,5 +81,5 @@ export function SendForm(props: SendFormProps) {
         Confirm
       </Button>
     </form>
-  );
+  )
 }

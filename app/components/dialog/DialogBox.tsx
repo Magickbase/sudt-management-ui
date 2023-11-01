@@ -1,14 +1,14 @@
-import { Dialog, Transition } from "@headlessui/react";
-import { type FC, type PropsWithChildren, Fragment } from "react";
-import { Button } from "../button";
+import { Dialog, Transition } from '@headlessui/react'
+import { type FC, type PropsWithChildren, Fragment } from 'react'
+import { Button } from '../button'
 
 export const DialogBox: FC<
   PropsWithChildren<{
-    title?: string;
-    footer?: boolean;
-    closeIcon?: boolean;
-    isOpen: boolean;
-    handleDismiss: () => void;
+    title?: string
+    footer?: boolean
+    closeIcon?: boolean
+    isOpen: boolean
+    handleDismiss: () => void
   }>
 > = ({
   title,
@@ -80,5 +80,5 @@ export const DialogBox: FC<
         </div>
       </Dialog>
     </Transition>
-  );
-};
+  )
+}

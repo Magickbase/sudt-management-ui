@@ -1,10 +1,10 @@
-import type { FC, DetailedHTMLProps, HTMLAttributes } from "react";
-import { Token } from "@/app/type";
-import Link from "next/link";
+import type { FC, DetailedHTMLProps, HTMLAttributes } from 'react'
+import { Token } from '@/app/type'
+import Link from 'next/link'
 
 interface TokenItemProps
   extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
-  token: Token;
+  token: Token
 }
 
 export const TokenItem: FC<TokenItemProps> = ({
@@ -15,7 +15,7 @@ export const TokenItem: FC<TokenItemProps> = ({
   <div
     {...attrs}
     className={`${
-      className ?? ""
+      className ?? ''
     } w-full flex items-center bg-lighter-color p-3 rounded-lg text-sm`}
   >
     <span>{token.symbol}</span>
@@ -29,4 +29,4 @@ export const TokenItem: FC<TokenItemProps> = ({
       <Link href={`/token/${token.symbol}/mint`}>Mint</Link>
     </div>
   </div>
-);
+)

@@ -3,16 +3,16 @@ import {
   type DetailedHTMLProps,
   type HTMLAttributes,
   useMemo,
-} from "react";
-import classnames from "classnames";
-import { type TransactionCell } from "@/app/type";
-import { parseAmount, formatAmount, ellipsisTextMiddle } from "@/app/utils";
-import { MOCK_TRANSACTION } from "@/app/mock";
+} from 'react'
+import classnames from 'classnames'
+import { type TransactionCell } from '@/app/type'
+import { parseAmount, formatAmount, ellipsisTextMiddle } from '@/app/utils'
+import { MOCK_TRANSACTION } from '@/app/mock'
 
 interface TransactionCellProps
   extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
-  cell: TransactionCell;
-  index: number;
+  cell: TransactionCell
+  index: number
 }
 
 export const TransactionCellItem: FC<TransactionCellProps> = ({
@@ -22,26 +22,26 @@ export const TransactionCellItem: FC<TransactionCellProps> = ({
   ...attrs
 }) => {
   const cellType = useMemo(() => {
-    if (cell.cellType === "udt") {
-      return cell.extraInfo.symbol;
+    if (cell.cellType === 'udt') {
+      return cell.extraInfo.symbol
     }
 
-    return "CKB Capacity";
-  }, [cell]);
+    return 'CKB Capacity'
+  }, [cell])
 
   const cellData = useMemo(() => {
-    if (cell.cellType === "udt") {
+    if (cell.cellType === 'udt') {
       return `${parseAmount(
         cell.extraInfo.amount,
-        cell.extraInfo.decimal
-      ).toFormat()} Unit`;
+        cell.extraInfo.decimal,
+      ).toFormat()} Unit`
     }
 
-    return "-";
-  }, [cell]);
+    return '-'
+  }, [cell])
 
   return (
-    <div {...attrs} className={classnames(className, "gap-2 flex flex-col")}>
+    <div {...attrs} className={classnames(className, 'gap-2 flex flex-col')}>
       <div className="flex">
         <span className="text-secondary-color">#{index}</span>
         <span className="flex ml-auto text-primary-color">
@@ -56,9 +56,7 @@ export const TransactionCellItem: FC<TransactionCellProps> = ({
 
       <div className="flex">
         <span className="text-secondary-color">Capacity</span>
-        <span className="ml-auto">
-          {formatAmount(cell.capacity, "8")} CKB
-        </span>
+        <span className="ml-auto">{formatAmount(cell.capacity, '8')} CKB</span>
       </div>
 
       <div className="flex">
@@ -70,5 +68,5 @@ export const TransactionCellItem: FC<TransactionCellProps> = ({
         <span className="ml-auto">Cell Info</span>
       </div>
     </div>
-  );
-};
+  )
+}

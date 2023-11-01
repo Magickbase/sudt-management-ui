@@ -1,12 +1,12 @@
-import { useForm } from "react-hook-form";
-import { Button } from "@/app/components/button";
-import { Input } from "@/app/components/input";
-import { Token } from "@/app/type";
+import { useForm } from 'react-hook-form'
+import { Button } from '@/app/components/button'
+import { Input } from '@/app/components/input'
+import { Token } from '@/app/type'
 
 interface TokenInfomationFormProps {
-  token?: Token;
-  onSubmit?: (data: Token) => void;
-  readonly?: boolean;
+  token?: Token
+  onSubmit?: (data: Token) => void
+  readonly?: boolean
 }
 
 export function TokenInfomationForm({
@@ -18,31 +18,43 @@ export function TokenInfomationForm({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<Token>({ defaultValues: token });
+  } = useForm<Token>({ defaultValues: token })
 
   return (
     <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
       <div className="bg-lighter-color p-4 rounded-xl flex flex-col gap-4">
         <div className="flex flex-col">
           <label>Symbol</label>
-          <Input disabled={readonly} {...register("symbol")} error={errors.symbol !== undefined} />
+          <Input
+            disabled={readonly}
+            {...register('symbol')}
+            error={errors.symbol !== undefined}
+          />
         </div>
 
         <div className="flex flex-col">
           <label>Name</label>
-          <Input disabled={readonly} {...register("name")} error={errors.name !== undefined} />
+          <Input
+            disabled={readonly}
+            {...register('name')}
+            error={errors.name !== undefined}
+          />
         </div>
 
         <div className="flex flex-col">
           <label>Creator Email</label>
-          <Input disabled={readonly} {...register("email")} error={errors.email !== undefined} />
+          <Input
+            disabled={readonly}
+            {...register('email')}
+            error={errors.email !== undefined}
+          />
         </div>
 
         <div className="flex flex-col">
           <label>Decimal</label>
           <Input
             disabled={readonly}
-            {...register("decimal")}
+            {...register('decimal')}
             error={errors.decimal !== undefined}
           />
         </div>
@@ -51,7 +63,7 @@ export function TokenInfomationForm({
           <label>Description</label>
           <Input
             disabled={readonly}
-            {...register("description")}
+            {...register('description')}
             error={errors.description !== undefined}
           />
         </div>
@@ -60,7 +72,7 @@ export function TokenInfomationForm({
           <label>Website</label>
           <Input
             disabled={readonly}
-            {...register("website")}
+            {...register('website')}
             error={errors.website !== undefined}
           />
         </div>
@@ -72,5 +84,5 @@ export function TokenInfomationForm({
         </Button>
       )}
     </form>
-  );
+  )
 }

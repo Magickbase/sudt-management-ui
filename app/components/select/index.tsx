@@ -1,45 +1,45 @@
-import { Fragment, useMemo, useState } from "react";
-import { Listbox, Transition } from "@headlessui/react";
-import { propagateServerField } from "next/dist/server/lib/render-server";
+import { Fragment, useMemo, useState } from 'react'
+import { Listbox, Transition } from '@headlessui/react'
+import { propagateServerField } from 'next/dist/server/lib/render-server'
 
-type SelectValue = string | number;
+type SelectValue = string | number
 type SelectOptions<V> = {
-  key: V;
-  label: string | React.ReactNode;
-};
+  key: V
+  label: string | React.ReactNode
+}
 
 interface SelectProps<V> {
-  onChange: (value: V) => void;
-  options: SelectOptions<V>[];
-  value: V;
-  defaultValue?: V;
-  placeholder?: string;
+  onChange: (value: V) => void
+  options: SelectOptions<V>[]
+  value: V
+  defaultValue?: V
+  placeholder?: string
 }
 
 export function Select<V = SelectValue>({
-  placeholder = "please select an option...",
+  placeholder = 'please select an option...',
   ...props
 }: SelectProps<V>) {
   const [_selected, _setSelected] = useState<V | undefined>(
-    props.defaultValue || undefined
-  );
+    props.defaultValue || undefined,
+  )
 
   const handleChange = (value: V) => {
     if (props.onChange) {
-      props.onChange(value);
+      props.onChange(value)
     }
 
-    _setSelected(value);
-  };
+    _setSelected(value)
+  }
 
-  const selected = props.value === undefined ? _selected : props.value;
+  const selected = props.value === undefined ? _selected : props.value
 
   const optionMaps = useMemo(() => {
     return props.options.reduce(
       (a, b) => ({ ...a, [b.key as string]: b }),
-      {}
-    ) as { [key: string]: SelectOptions<V> };
-  }, [props.options]);
+      {},
+    ) as { [key: string]: SelectOptions<V> }
+  }, [props.options])
 
   return (
     <Listbox value={selected} onChange={handleChange}>
@@ -70,9 +70,11 @@ export function Select<V = SelectValue>({
                 key={optionIdx}
                 className={({ active }) =>
                   `relative cursor-pointer select-none py-2 pr-4 ${
-                    active ? "bg-lighter-color" : ""
+                    active ? 'bg-lighter-color' : ''
                   } ${
-                    optionIdx < props.options.length - 1 ? "border-b-[1px] border-solid border-rim-color" : ''
+                    optionIdx < props.options.length - 1
+                      ? 'border-b-[1px] border-solid border-rim-color'
+                      : ''
                   }`
                 }
                 value={option.key}
@@ -81,7 +83,7 @@ export function Select<V = SelectValue>({
                   <>
                     <span
                       className={`block truncate ${
-                        selected ? "font-medium" : "font-normal"
+                        selected ? 'font-medium' : 'font-normal'
                       }`}
                     >
                       {option.label}
@@ -94,5 +96,5 @@ export function Select<V = SelectValue>({
         </Transition>
       </div>
     </Listbox>
-  );
+  )
 }

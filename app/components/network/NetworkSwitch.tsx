@@ -1,29 +1,29 @@
-import { Dialog, Transition } from "@headlessui/react";
+import { Dialog, Transition } from '@headlessui/react'
 import {
   type FC,
   type ButtonHTMLAttributes,
   type PropsWithChildren,
   useState,
   Fragment,
-} from "react";
-import { Button } from "../button";
-import { useNetwork } from "@/app/hooks/useNetwork";
-import { DialogBox } from "../dialog/DialogBox";
+} from 'react'
+import { Button } from '../button'
+import { useNetwork } from '@/app/hooks/useNetwork'
+import { DialogBox } from '../dialog/DialogBox'
 
 export const NetworkSwitch: FC<
   PropsWithChildren<
     { isMainnet?: boolean } & ButtonHTMLAttributes<HTMLButtonElement>
   >
 > = ({ children, className, isMainnet, ...attrs }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const { network, switchNetwork } = useNetwork();
+  const [isOpen, setIsOpen] = useState(false)
+  const { network, switchNetwork } = useNetwork()
 
   function handleDismiss() {
-    setIsOpen(false);
+    setIsOpen(false)
   }
 
   function openModal() {
-    setIsOpen(true);
+    setIsOpen(true)
   }
 
   return (
@@ -34,8 +34,8 @@ export const NetworkSwitch: FC<
           onClick={openModal}
         >
           <img className="mr-2" src="/icons/switch.svg" alt="switch" />
-          <div className="bg-green-400 w-1 h-1 mr-2 rounded"/>
-          {network === "mainnet" ? "Mirana Mainnet" : "Pudge Testnet"}
+          <div className="bg-green-400 w-1 h-1 mr-2 rounded" />
+          {network === 'mainnet' ? 'Mirana Mainnet' : 'Pudge Testnet'}
         </Button>
       </div>
 
@@ -50,8 +50,8 @@ export const NetworkSwitch: FC<
           block
           className="mb-4"
           onClick={() => {
-            switchNetwork("testnet");
-            handleDismiss();
+            switchNetwork('testnet')
+            handleDismiss()
           }}
         >
           Pudge Testnet
@@ -61,13 +61,13 @@ export const NetworkSwitch: FC<
           ghost
           block
           onClick={() => {
-            switchNetwork("mainnet");
-            handleDismiss();
+            switchNetwork('mainnet')
+            handleDismiss()
           }}
         >
           Mirana Mainnet
         </Button>
       </DialogBox>
     </>
-  );
-};
+  )
+}
