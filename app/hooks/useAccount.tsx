@@ -42,11 +42,13 @@ export const AccountContextProvider = ({ children }: { children: React.ReactNode
   const [account, setAccount] = useState<WalletConnect.Account | null>(null)
   const [addressList, setAddressList] = useState<Array<WalletConnect.AddressItem>>([])
 
+  const primaryAccount = account?.accounts[0]
+
   const { chainId, accountId } = useMemo(() => {
-    if (!account?.accounts[0]) return { chainId: null, accountId: null }
-    const [chain, network, accountId] = account.accounts[0].split(':')
+    if (!primaryAccount) return { chainId: null, accountId: null }
+    const [chain, network, accountId] = primaryAccount.split(':')
     return { chainId: `${chain}:${network}`, accountId }
-  }, [account?.accounts[0]])
+  }, [primaryAccount])
 
   const isConnected = !!chainId
 
