@@ -14,8 +14,8 @@ async function fetchAssets() {
       key: 'CKB',
     },
     ...MOCK_ASSETS.map((asset) => ({
-      label: asset.symbol,
-      key: asset.symbol,
+      label: asset.displayName,
+      key: asset.uan,
     })),
   ]
 }

@@ -37,7 +37,8 @@ export const TYPE_LABEL_MAP = {
 export type Assets = {
   amount: string
   decimal: string
-  symbol: string
+  displayName: string
+  uan: string
 }
 
 export type Token = {
@@ -47,6 +48,7 @@ export type Token = {
   email: string
   description: string
   website: string
+  icon: string
 }
 
 export namespace WalletConnect {
