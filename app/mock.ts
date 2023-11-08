@@ -27,17 +27,20 @@ export const MOCK_ACCOUNTS: {
 
 export const MOCK_ASSETS: Assets[] = [
   {
-    symbol: 'SUDT1',
+    displayName: 'SUDT1',
+    uan: 'SUDT1',
     decimal: '8',
     amount: '10000000000',
   },
   {
-    symbol: 'SUDT2',
+    displayName: 'SUDT2',
+    uan: 'SUDT2',
     decimal: '8',
     amount: '20000000000',
   },
   {
-    symbol: 'SUDT3',
+    displayName: 'SUDT3',
+    uan: 'SUDT3',
     decimal: '8',
     amount: '30000000000',
   },
@@ -51,6 +54,7 @@ export const MOCK_TOKENS: Token[] = [
     email: '123@gmail.com',
     description: '',
     website: '',
+    icon: '',
   },
   {
     symbol: 'SUDT2',
@@ -59,6 +63,7 @@ export const MOCK_TOKENS: Token[] = [
     email: '123@gmail.com',
     description: '',
     website: '',
+    icon: '',
   },
   {
     symbol: 'SUDT3',
@@ -67,6 +72,7 @@ export const MOCK_TOKENS: Token[] = [
     email: '123@gmail.com',
     description: '',
     website: '',
+    icon: '',
   },
 ]
 
