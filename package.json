@@ -10,13 +10,13 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "@ckb-connect/walletconnect-dapp-sdk": "^0.0.1-alpha.1",
     "@ckb-lumos/base": "0.20.0",
     "@headlessui/react": "1.7.17",
     "@types/node": "20.9.0",
     "@types/react": "18.2.37",
     "@types/react-dom": "18.2.15",
     "@walletconnect/types": "2.10.4",
-    "@walletconnect/universal-provider": "2.10.4",
     "@web3modal/standalone": "2.4.3",
     "autoprefixer": "10.4.16",
     "bignumber.js": "9.1.2",

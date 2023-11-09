@@ -1,10 +1,15 @@
 'use client'
 
 import { useState, useContext, createContext, useMemo, useEffect } from 'react'
-import UniversalProvider from '@walletconnect/universal-provider'
 import { Web3Modal } from '@web3modal/standalone'
 import { WalletConnect } from '@/app/type'
-import { WC_ID, CODE_HASH_LIST } from '../utils'
+import {
+  type Address,
+  type Transaction,
+  type SignedTransaction,
+  CkbWCSdk,
+} from '@ckb-connect/walletconnect-dapp-sdk'
+import { WC_ID, NETWORK, CODE_HASH_LIST } from '../utils'
 
 const CHAIN_ID = 'ckb:testnet'
 // TODO: use omnilock once neuron is ready
@@ -13,15 +18,15 @@ const LOCK_SCRIPT_CODE_HASH =
 
 export const AccountContext = createContext<{
   id: string | null
-  addressList: Array<WalletConnect.AddressItem>
+  addressList: Array<Address>
   isConnected: boolean
   connect: (() => Promise<void>) | null
   disconnect: Function
-  updateAddresses: () => Promise<Array<WalletConnect.AddressItem>>
+  updateAddresses: () => Promise<Array<Address>>
   signTransaction: (
-    transaction: WalletConnect.Transaction,
+    transaction: Transaction,
     description?: string,
-  ) => Promise<WalletConnect.SignedTransaction | undefined>
+  ) => Promise<SignedTransaction | undefined>
 }>({
   id: null,
   addressList: [],
@@ -43,11 +48,9 @@ export const AccountContextProvider = ({
 }: {
   children: React.ReactNode
 }) => {
-  const [provider, setProvider] = useState<UniversalProvider | null>(null)
+  const [provider, setProvider] = useState<CkbWCSdk | null>(null)
   const [account, setAccount] = useState<WalletConnect.Account | null>(null)
-  const [addressList, setAddressList] = useState<
-    Array<WalletConnect.AddressItem>
-  >([])
+  const [addressList, setAddressList] = useState<Array<Address>>([])
 
   const primaryAccount = account?.accounts[0]
 
@@ -77,22 +80,14 @@ export const AccountContextProvider = ({
       return addressList
     }
     try {
-      const result = await provider.client.request<
-        Record<string, Array<WalletConnect.AddressItem>>
-      >({
-        topic: account.topic,
-        chainId,
-        request: {
-          method: 'ckb_getAddresses',
-          params: {
-            [LOCK_SCRIPT_CODE_HASH]: {
-              page: {
-                size: 10,
-                after: addressList[0] ?? '',
-              },
-              type: 'all',
-            },
+      const result = await provider.getAddresses({
+        [LOCK_SCRIPT_CODE_HASH]: {
+          page: {
+            size: 10,
+            before: '',
+            after: addressList[0].address ?? '',
           },
+          type: 'all',
         },
       })
       const list = result[LOCK_SCRIPT_CODE_HASH] ?? []
@@ -110,10 +105,9 @@ export const AccountContextProvider = ({
     if (!provider) {
       throw new Error('Provider is not found')
     }
-    const { uri, approval } = await provider.client.connect({
-      sessionProperties: {
-        scriptBases: CODE_HASH_LIST.toString(),
-      },
+    const { uri, approval } = await provider.createConnect({
+      network: NETWORK,
+      scriptBases: CODE_HASH_LIST,
     })
     await web3Modal.openModal({ uri })
     const session = await approval()
@@ -125,58 +119,35 @@ export const AccountContextProvider = ({
         topic: session.topic,
       })
       window.onbeforeunload = () => {
-        window.alert('hwl')
-        provider.client.disconnect({
-          topic: session.topic,
-          reason: {
-            code: 0,
-            message: 'Disconnected by page',
-          },
-        })
+        provider.disconnect()
       }
     }
   }
 
   const disconnect = () => {
     if (!account || !provider) return
-    return provider.client
-      .disconnect({
-        topic: account.topic,
-        reason: {
-          code: 0,
-          message: 'Disconnected by user',
-        },
-      })
-      .then(resetAccount)
+    return provider.disconnect().then(resetAccount)
   }
 
   const signTransaction = async (
-    transaction: WalletConnect.Transaction,
-    description?: string,
+    transaction: Transaction,
+    description: string = '',
   ) => {
     if (!account || !chainId || !provider) return
     try {
-      const res =
-        await provider.client.request<WalletConnect.SignedTransaction>({
-          topic: account.topic,
-          chainId,
-          request: {
-            method: 'ckb_signTransaction',
-            params: {
-              transaction,
-              actionType: 'sign',
-              description,
-            },
-          },
-        })
-      return res
+      const res = await provider.signTransaction({
+        transaction,
+        description,
+        actionType: 'sign',
+      })
+      return res.transaction
     } catch (e) {
       console.error(`Failed to sign a transaction: ${e}`)
     }
   }
 
   useEffect(() => {
-    UniversalProvider.init({
+    CkbWCSdk.init({
       projectId: WC_ID,
       metadata: {
         name: 'SUDT Management',
@@ -184,9 +155,9 @@ export const AccountContextProvider = ({
         url: globalThis.location.href,
         icons: [],
       },
-    }).then((p) => {
-      setProvider(p)
     })
+      .then(setProvider)
+      .catch(console.error)
   }, [setProvider])
 
   useEffect(() => {
@@ -198,14 +169,20 @@ export const AccountContextProvider = ({
 
     const handleAccountChanged = resetAccount
     const handleAddressesChanged = updateAddresses
-    provider.on(WalletConnect.Events.AccountChanged, handleAccountChanged)
-    provider.on(WalletConnect.Events.AddressesChagned, handleAddressesChanged)
+    provider.emitter.on(
+      WalletConnect.Events.AccountChanged,
+      handleAccountChanged,
+    )
+    provider.emitter.on(
+      WalletConnect.Events.AddressesChagned,
+      handleAddressesChanged,
+    )
     return () => {
-      provider.removeListener(
+      provider.emitter.removeListener(
         WalletConnect.Events.AccountChanged,
         handleAccountChanged,
       )
-      provider.removeListener(
+      provider.emitter.removeListener(
         WalletConnect.Events.AddressesChagned,
         handleAddressesChanged,
       )

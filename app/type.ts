@@ -52,13 +52,6 @@ export type Token = {
 }
 
 export namespace WalletConnect {
-  export interface AddressItem {
-    address: string
-    identifier: string
-    description: string
-    index: number
-  }
-
   export enum Events {
     AccountChanged = 'accountChanged',
     AddressesChagned = 'addressesChagned',
@@ -75,28 +68,5 @@ export namespace WalletConnect {
     ]
     methods: ['ckb_getAddresses', 'ckb_signTransaction', 'ckb_signMessage']
     topic: string
-  }
-
-  // TODO: can be introduced from SDK
-  export interface Transaction {
-    cellDeps: Array<any>
-    headerDeps: Array<any>
-    inputs: Array<any>
-    outputs: Array<any>
-    description: string
-    version: '0'
-    fee: string
-    outputsData: Array<string>
-  }
-
-  // TODO can be introduced from SDK
-  export interface SignedTransaction {
-    transaction: Transaction & {
-      witnesses: string[]
-      signatures: {
-        [hash: string]: Array<string>
-      }
-    }
-    status: string
   }
 }
