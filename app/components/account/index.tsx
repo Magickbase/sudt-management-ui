@@ -10,7 +10,7 @@ export const Account = () => {
     return null
   }
 
-  if (!account.addressList[0]) {
+  if (!account.id) {
     return <SubSection>Loading...</SubSection>
   }
 
@@ -18,7 +18,7 @@ export const Account = () => {
     <SubSection>
       <div className="flex">
         <div className="flex-1 overflow-hidden text-sm">
-          <div className="overflow-hidden text-ellipsis ">{account?.id}</div>
+          <div className="overflow-hidden text-ellipsis ">{account.name}</div>
           <div className="text-dimmed-color">Account</div>
         </div>
         <div>

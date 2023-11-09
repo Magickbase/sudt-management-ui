@@ -59,6 +59,7 @@ export namespace WalletConnect {
   }
 
   export interface Account {
+    name: string
     accounts: Array<string>
     chains: Array<`ckb:${'testnet' | 'devnet'}`>
     events: [

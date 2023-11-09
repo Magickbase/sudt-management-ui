@@ -9,7 +9,7 @@ import {
   type SignedTransaction,
   CkbWCSdk,
 } from '@ckb-connect/walletconnect-dapp-sdk'
-import { WC_ID, NETWORK, CODE_HASH_LIST } from '../utils'
+import { WC_ID, NETWORK, CODE_HASH_LIST, DEFAULT_ACCOUNT_NAME } from '../utils'
 
 const CHAIN_ID = 'ckb:testnet'
 // TODO: use omnilock once neuron is ready
@@ -18,6 +18,7 @@ const LOCK_SCRIPT_CODE_HASH =
 
 export const AccountContext = createContext<{
   id: string | null
+  name: string
   addressList: Array<Address>
   isConnected: boolean
   connect: (() => Promise<void>) | null
@@ -29,6 +30,7 @@ export const AccountContext = createContext<{
   ) => Promise<SignedTransaction | undefined>
 }>({
   id: null,
+  name: DEFAULT_ACCOUNT_NAME,
   addressList: [],
   isConnected: false,
   connect: null,
@@ -115,7 +117,8 @@ export const AccountContextProvider = ({
     if (session) {
       web3Modal.closeModal()
       setAccount({
-        ...(session.namespaces.ckb as WalletConnect.Account),
+        ...(session.namespaces.ckb as Omit<WalletConnect.Account, 'name'>),
+        name: session.sessionProperties?.accountName ?? DEFAULT_ACCOUNT_NAME,
         topic: session.topic,
       })
       window.onbeforeunload = () => {
@@ -193,6 +196,7 @@ export const AccountContextProvider = ({
     <AccountContext.Provider
       value={{
         id: accountId,
+        name: account?.name ?? DEFAULT_ACCOUNT_NAME,
         addressList,
         isConnected,
         connect,
