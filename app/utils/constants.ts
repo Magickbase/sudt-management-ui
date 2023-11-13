@@ -4,3 +4,5 @@ export const CODE_HASH_LIST =
   process.env.NEXT_PUBLIC_CODE_HASH_LIST?.split(',') ?? []
 export const NETWORK: Network =
   (process.env.NEXT_PUBLIC_NETWORK as Network) ?? 'testnet'
+
+export const DEFAULT_ACCOUNT_NAME = 'Anonymous'
