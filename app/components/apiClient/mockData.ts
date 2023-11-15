@@ -1,4 +1,5 @@
-import type { Transaction, Assets, Token } from './type'
+import type { Transaction, Assets, Token } from '@/app/type'
+import type { RawTransaction } from '@ckb-lumos/base'
 
 export const MOCK_ACCOUNTS: {
   [namke: string]: Record<'address' | 'balance', string>
@@ -26,6 +27,12 @@ export const MOCK_ACCOUNTS: {
 }
 
 export const MOCK_ASSETS: Assets[] = [
+  {
+    displayName: 'CKB',
+    uan: 'CKB',
+    decimal: '8',
+    amount: '10000000000',
+  },
   {
     displayName: 'SUDT1',
     uan: 'SUDT1',
@@ -76,6 +83,77 @@ export const MOCK_TOKENS: Token[] = [
   },
 ]
 
+export const MOCK_RAW_TRANSACTION: RawTransaction = {
+  version: '0x0',
+  cellDeps: [
+    {
+      outPoint: {
+        txHash:
+          '0xbcdb11e9815b3d9fb6278af097e2ae54fe4f8c9c97d352d8a15538ed0398ac83',
+        index: '0x1',
+      },
+      depType: 'depGroup',
+    },
+    {
+      outPoint: {
+        txHash:
+          '0xbcdb11e9815b3d9fb6278af097e2ae54fe4f8c9c97d352d8a15538ed0398ac83',
+        index: '0x0',
+      },
+      depType: 'depGroup',
+    },
+  ],
+  headerDeps: [],
+  inputs: [
+    {
+      since: '0x0',
+      previousOutput: {
+        txHash:
+          '0xa401e0b880329ea492e95f3fc085fe03e33a66f5e010aadbf8fcd0d5ecc09e5f',
+        index: '0x0',
+      },
+    },
+    {
+      since: '0x0',
+      previousOutput: {
+        txHash:
+          '0x3fdc5faa485a9687dcf7b12445cb77376798cbbc6efbc9fd5e8e22589c385921',
+        index: '0x1',
+      },
+    },
+  ],
+  outputs: [
+    {
+      capacity: '0x2540be400',
+      lock: {
+        codeHash:
+          '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
+        hashType: 'type',
+        args: '0x6cd8ae51f91bacd7910126f880138b30ac5d3015',
+      },
+    },
+    {
+      capacity: '0x5af0bc6e5c00',
+      lock: {
+        codeHash:
+          '0x5c5069eb0857efc65e1bca0c07df34c31663b3622fd3876c876320fc9634e2a8',
+        hashType: 'type',
+        args: '0x8bebce3e7dd7b7179defe4d06ecf9776b1ba686d',
+      },
+    },
+    {
+      capacity: '0x1bc0b78127dd9f00',
+      lock: {
+        codeHash:
+          '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
+        hashType: 'type',
+        args: '0xe390d4b9b4c7637ec80799bdaf644ae625cdb922',
+      },
+    },
+  ],
+  outputsData: ['0x', '0x', '0x'],
+}
+
 export const MOCK_TRANSACTION: Transaction[] = [
   {
     type: 'from',
@@ -84,7 +162,7 @@ export const MOCK_TRANSACTION: Transaction[] = [
     txStatus: 'pending',
     displayInputs: [
       {
-        addressHash: MOCK_ACCOUNTS['alice'].address,
+        address: MOCK_ACCOUNTS['alice'].address,
         cellType: 'udt',
         capacity: '31800000000.0',
         extraInfo: {
@@ -96,7 +174,7 @@ export const MOCK_TRANSACTION: Transaction[] = [
     ],
     displayOutputs: [
       {
-        addressHash: MOCK_ACCOUNTS['self'].address,
+        address: MOCK_ACCOUNTS['self'].address,
         cellType: 'udt',
         capacity: '31800000000',
         extraInfo: {
@@ -115,7 +193,7 @@ export const MOCK_TRANSACTION: Transaction[] = [
     blockTimestamp: '1695179332694',
     displayInputs: [
       {
-        addressHash: MOCK_ACCOUNTS['self'].address,
+        address: MOCK_ACCOUNTS['self'].address,
         cellType: 'udt',
         capacity: '31800000000',
         extraInfo: {
@@ -127,7 +205,7 @@ export const MOCK_TRANSACTION: Transaction[] = [
     ],
     displayOutputs: [
       {
-        addressHash: MOCK_ACCOUNTS['alice'].address,
+        address: MOCK_ACCOUNTS['alice'].address,
         cellType: 'udt',
         capacity: '31800000000.0',
         extraInfo: {
@@ -146,14 +224,14 @@ export const MOCK_TRANSACTION: Transaction[] = [
     blockTimestamp: '1695141801708',
     displayInputs: [
       {
-        addressHash: MOCK_ACCOUNTS['self'].address,
+        address: MOCK_ACCOUNTS['self'].address,
         cellType: 'normal',
         capacity: '60000000000',
       },
     ],
     displayOutputs: [
       {
-        addressHash: MOCK_ACCOUNTS['alice'].address,
+        address: MOCK_ACCOUNTS['alice'].address,
         cellType: 'udt',
         capacity: '30000000000.0',
         extraInfo: {
@@ -163,7 +241,7 @@ export const MOCK_TRANSACTION: Transaction[] = [
         },
       },
       {
-        addressHash: MOCK_ACCOUNTS['self'].address,
+        address: MOCK_ACCOUNTS['self'].address,
         cellType: 'udt',
         capacity: '30000000000.0',
         extraInfo: {

@@ -2,6 +2,7 @@
 
 import { useState, useContext, createContext, useMemo, useEffect } from 'react'
 import { Web3Modal } from '@web3modal/standalone'
+import { utils } from '@ckb-lumos/base'
 import { WalletConnect } from '@/app/type'
 import {
   type Address,
@@ -19,6 +20,7 @@ const LOCK_SCRIPT_CODE_HASH =
 export const AccountContext = createContext<{
   id: string | null
   name: string
+  addressHash: string
   addressList: Array<Address>
   isConnected: boolean
   connect: (() => Promise<void>) | null
@@ -31,6 +33,7 @@ export const AccountContext = createContext<{
 }>({
   id: null,
   name: DEFAULT_ACCOUNT_NAME,
+  addressHash: '',
   addressList: [],
   isConnected: false,
   connect: null,
@@ -53,6 +56,15 @@ export const AccountContextProvider = ({
   const [provider, setProvider] = useState<CkbWCSdk | null>(null)
   const [account, setAccount] = useState<WalletConnect.Account | null>(null)
   const [addressList, setAddressList] = useState<Array<Address>>([])
+
+  const addressHash = useMemo(() => {
+    const hasher = new utils.CKBHasher()
+    addressList.forEach(({ address }) => {
+      hasher.update(address)
+    })
+
+    return hasher.digestHex()
+  }, [addressList])
 
   const primaryAccount = account?.accounts[0]
 
@@ -104,6 +116,7 @@ export const AccountContextProvider = ({
   }
 
   const connect = async () => {
+    console.log('useAccount connect')
     if (!provider) {
       throw new Error('Provider is not found')
     }
@@ -112,7 +125,10 @@ export const AccountContextProvider = ({
       scriptBases: CODE_HASH_LIST,
     })
     await web3Modal.openModal({ uri })
+
+    console.log('await approval.....')
     const session = await approval()
+    console.log('approvaled!', session)
 
     if (session) {
       web3Modal.closeModal()
@@ -197,6 +213,7 @@ export const AccountContextProvider = ({
       value={{
         id: accountId,
         name: account?.name ?? DEFAULT_ACCOUNT_NAME,
+        addressHash,
         addressList,
         isConnected,
         connect,

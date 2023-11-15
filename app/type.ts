@@ -1,6 +1,6 @@
 export type TransactionNormalCell = {
   cellType: 'normal'
-  addressHash: string
+  address: string
   capacity: string
 }
 
@@ -12,7 +12,7 @@ export type UdtInfo = {
 
 export type TransactionUdtCell = {
   cellType: 'udt'
-  addressHash: string
+  address: string
   capacity: string
   extraInfo: UdtInfo
 }
@@ -70,4 +70,49 @@ export namespace WalletConnect {
     methods: ['ckb_getAddresses', 'ckb_signTransaction', 'ckb_signMessage']
     topic: string
   }
+}
+
+export interface AddressHashParams {
+  addressHash: string
+}
+
+export type TokenCreateData = {
+  name: string
+  symbol: string
+  supply: string
+  account: string // the address of owner
+  decimal: string
+  description: string
+  website: string
+  icon: string
+  typeId: string
+  explorerCode: string
+  args: string // the args of sudt type script
+  uan: string
+  displayName: string
+  email: string
+}
+
+export type TokenTransferParams = {
+  addressHash: string
+  token: string // token args
+  amount: string
+  to: string
+}
+
+export type TokenMintParams = {
+  from: string[]
+  to: string
+  amount: string
+}
+
+export type History = {
+  txHash: string
+  from: string
+  to: string
+  time: string
+  status: string
+  sudtAmount: string
+  CKBAmount: string
+  url: string
 }

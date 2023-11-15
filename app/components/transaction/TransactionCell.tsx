@@ -7,7 +7,6 @@ import {
 import classnames from 'classnames'
 import { type TransactionCell } from '@/app/type'
 import { parseAmount, formatAmount, ellipsisTextMiddle } from '@/app/utils'
-import { MOCK_TRANSACTION } from '@/app/mock'
 
 interface TransactionCellProps
   extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
@@ -46,7 +45,7 @@ export const TransactionCellItem: FC<TransactionCellProps> = ({
         <span className="text-secondary-color">#{index}</span>
         <span className="flex ml-auto text-primary-color">
           <img src="/icons/right.svg" alt="right" className="mr-2" />
-          {ellipsisTextMiddle(cell.addressHash, { prefix: 10, suffix: 10 })}
+          {ellipsisTextMiddle(cell.address, { prefix: 10, suffix: 10 })}
         </span>
       </div>
       <div className="flex">

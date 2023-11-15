@@ -1,30 +1,27 @@
 import type { FC, DetailedHTMLProps, HTMLAttributes } from 'react'
 import classnames from 'classnames'
-import { HistoryItem } from './HistoryItem'
+import { AssetItem } from './AssetItem'
 import useSWR from 'swr'
 import { sudtApi } from '../apiClient'
 import { useAccount } from '@/app/hooks/useAccount'
 
-interface HistoryListProps
+interface AssetListProps
   extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {}
 
-export const HistoryList: FC<HistoryListProps> = ({ className, ...attrs }) => {
+export const AssetList: FC<AssetListProps> = ({ className, ...attrs }) => {
   const { addressHash } = useAccount()
-  const {
-    data: transactions,
-    error,
-    isLoading,
-  } = useSWR(['transaction'], () =>
-    sudtApi.account.transferHistory(addressHash),
+  const { data: assets } = useSWR(['assets'], () =>
+    sudtApi.account.listAssets(addressHash),
   )
-  if (!transactions) {
+
+  if (!assets) {
     return null
   }
 
   return (
     <div {...attrs} className={classnames(className, 'gap-2 flex flex-col')}>
-      {transactions.map((tx) => (
-        <HistoryItem key={tx.txHash} transaction={tx} />
+      {assets.map((asset) => (
+        <AssetItem key={asset.uan} asset={asset} />
       ))}
     </div>
   )

@@ -1,8 +1,7 @@
 'use client'
 import { useState } from 'react'
 import Link from 'next/link'
-import { AssetItem } from './components/asset/AssetItem'
-import { Button } from './components/button'
+import { AssetList } from './components/asset/AssetList'
 import { Tabs } from './components/tabs'
 import { HistoryList } from './components/history/HistoryList'
 import { TokenPanel } from './components/token/TokenPanel'
@@ -10,20 +9,27 @@ import { NetworkSwitch } from './components/network/NetworkSwitch'
 import { ConnectAccount } from './components/connect-account'
 import { useAccount } from './hooks/useAccount'
 import { formatAmount } from './utils'
+import useSWR from 'swr'
+import { sudtApi } from './components/apiClient'
 
 export default function Home() {
   const [selectedIndex, setSelectedIndex] = useState(0)
   const account = useAccount()
+  const { data: assets } = useSWR(['assets'], () =>
+    sudtApi.account.listAssets(account.addressHash),
+  )
 
   if (!account.isConnected) {
     return <ConnectAccount />
   }
 
+  const ckbBalance = assets?.find((asset) => asset.uan === 'CKB')?.amount || '0'
+
   return (
     <>
       <div className="flex flex-col gap-4">
         <div className="text-center text-highlight-color text-2xl font-medium">
-          {formatAmount('1', '8')} CKB
+          {formatAmount(ckbBalance, '8')} CKB
         </div>
 
         <NetworkSwitch />
@@ -49,11 +55,7 @@ export default function Home() {
           items={[
             {
               label: 'Assets',
-              children: (
-                <AssetItem
-                  asset={{ symbol: 'CKB', amount: '1000', decimal: '0' }}
-                />
-              ),
+              children: <AssetList />,
             },
             {
               label: 'Tokens',

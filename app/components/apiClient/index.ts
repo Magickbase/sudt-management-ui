@@ -1,50 +1,15 @@
-import { Token, Assets } from '@/app/type'
+import {
+  Token,
+  Assets,
+  AddressHashParams,
+  TokenCreateData,
+  TokenTransferParams,
+  TokenMintParams,
+  Transaction,
+} from '@/app/type'
 import { RawTransaction } from '@ckb-lumos/base'
 import { APIClient, APIClientOptions } from './base'
-
-interface AddressParams {
-  address: string
-}
-
-type TokenCreateData = {
-  name: string
-  symbol: string
-  supply: string
-  account: string // the address of owner
-  decimal: string
-  description: string
-  website: string
-  icon: string
-  typeId: string
-  explorerCode: string
-  args: string // the args of sudt type script
-  uan: string
-  displayName: string
-  email: string
-}
-
-type TokenTransferParams = {
-  token: string // token args
-  amount: string
-  to: string
-}
-
-type TokenMintParams = {
-  from: string[]
-  to: string
-  amount: string
-}
-
-type History = {
-  txHash: string
-  from: string
-  to: string
-  time: string
-  status: string
-  sudtAmount: string
-  CKBAmount: string
-  url: string
-}
+import { MockApi } from './mock'
 
 export class SUDTApi extends APIClient {
   constructor(opts: APIClientOptions) {
@@ -52,7 +17,7 @@ export class SUDTApi extends APIClient {
   }
 
   token = {
-    list: (params: Partial<AddressParams>) =>
+    list: (params: Partial<AddressHashParams>) =>
       this.get<Token[]>(`/token?${new URLSearchParams(params)}`),
     detail: (args: string) => this.get<Token>(`/token/${args}`),
     create: (data: TokenCreateData) =>
@@ -69,10 +34,14 @@ export class SUDTApi extends APIClient {
   }
 
   account = {
-    listAssets: (address: string) =>
-      this.get<Assets[]>(`/account/${address}/assets`),
-    transferHistory: (address: string) =>
-      this.get<History[]>(`/account/${address}/assets/transfer/history`),
+    asyncAddress: (addressHash: string, addresses: string[]) =>
+      this.post(`/account/${addressHash}`, { addresses }),
+    listAssets: (addressHash: string) =>
+      this.get<Assets[]>(`/account/${addressHash}/assets`),
+    transferHistory: (addressHash: string) =>
+      this.get<Transaction[]>(
+        `/account/${addressHash}/assets/transfer/history`,
+      ),
   }
 }
 
@@ -82,4 +51,7 @@ const options = {
   origin: process.env.NEXT_PUBLIC_API_ENDPOINT || '/',
 }
 
-export const sudtApi = new SUDTApi(options)
+export const sudtApi =
+  process.env.NEXT_PUBLIC_MOCK_API === 'true'
+    ? new MockApi(options)
+    : new SUDTApi(options)

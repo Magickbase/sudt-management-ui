@@ -4,17 +4,29 @@ import {
   type HTMLAttributes,
   useState,
 } from 'react'
+import useSWR from 'swr'
 import { TokenItem } from './TokenItem'
 import { Toggle } from '@/app/components/switch'
 import { Button } from '@/app/components/button'
-import { MOCK_TOKENS } from '@/app/mock'
+import { sudtApi } from '@/app/components/apiClient'
+import { useAccount } from '@/app/hooks/useAccount'
 
 interface TokenPanelProps
   extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {}
 
 export const TokenPanel: FC<TokenPanelProps> = ({ ...attrs }) => {
   const [autodetect, setAutodetect] = useState(false)
-  const tokens = MOCK_TOKENS
+  const { addressHash } = useAccount()
+  const {
+    data: tokens,
+    error,
+    isLoading,
+  } = useSWR(['tokens', addressHash], () => sudtApi.token.list({ addressHash }))
+
+  if (!tokens) {
+    return null
+  }
+
   if (autodetect) {
     return (
       <div {...attrs}>
