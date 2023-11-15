@@ -3,22 +3,9 @@ import { useForm, Controller } from 'react-hook-form'
 import { Button } from '@/app/components/button'
 import { Input } from '@/app/components/input'
 import { Select } from '@/app/components/select'
-import { MOCK_ASSETS } from '@/app/mock'
-
-import { useState } from 'react'
-
-async function fetchAssets() {
-  return [
-    {
-      label: 'CKB',
-      key: 'CKB',
-    },
-    ...MOCK_ASSETS.map((asset) => ({
-      label: asset.displayName,
-      key: asset.uan,
-    })),
-  ]
-}
+import { sudtApi } from '../components/apiClient'
+import { useAccount } from '../hooks/useAccount'
+import { useMemo } from 'react'
 
 type FormData = {
   token: string
@@ -38,7 +25,21 @@ export function SendForm(props: SendFormProps) {
     formState: { errors },
   } = useForm<FormData>()
 
-  const { data: assets } = useSWR(['assets'], () => fetchAssets())
+  const { addressHash } = useAccount()
+  const { data: assets } = useSWR(['assets'], () =>
+    sudtApi.account.listAssets(addressHash),
+  )
+
+  const assetOptions = useMemo(
+    () =>
+      assets?.map((asset) => ({ label: asset.displayName, key: asset.uan })) ||
+      [],
+    [assets],
+  )
+
+  if (!assets) {
+    return null
+  }
 
   return (
     <form
@@ -53,7 +54,7 @@ export function SendForm(props: SendFormProps) {
             name="token"
             control={control}
             rules={{ required: true }}
-            render={({ field }) => <Select {...field} options={assets || []} />}
+            render={({ field }) => <Select {...field} options={assetOptions} />}
           />
         </div>
 

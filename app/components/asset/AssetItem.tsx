@@ -1,13 +1,10 @@
 import type { FC, DetailedHTMLProps, HTMLAttributes } from 'react'
 import { formatAmount } from '@/app/utils'
+import type { Assets } from '@/app/type'
 
 interface AssetItemProps
   extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
-  asset: {
-    symbol: string
-    decimal: string
-    amount: string
-  }
+  asset: Assets
 }
 
 export const AssetItem: FC<AssetItemProps> = ({
@@ -21,7 +18,7 @@ export const AssetItem: FC<AssetItemProps> = ({
       className ?? ''
     } cursor-pointer w-full flex bg-lighter-color p-3 rounded-lg text-sm`}
   >
-    <span>{asset.symbol}</span>
+    <span>{asset.displayName}</span>
     <span className="ml-auto mr-1">
       {formatAmount(asset.amount, asset.decimal)}
     </span>

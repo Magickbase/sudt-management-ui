@@ -4,14 +4,9 @@ import { useRouter } from 'next/navigation'
 import { Toggle } from '@/app/components/switch'
 import { PageHeader } from '@/app/components/header'
 import classnames from 'classnames'
-import { MOCK_TRANSACTION } from '@/app/mock'
 import { TransactionCellItem } from '@/app/components/transaction/TransactionCell'
-
-async function fetchTx(txHash: string) {
-  const tx = MOCK_TRANSACTION.find((tx) => tx.txHash === txHash)
-  console.log(tx)
-  return tx
-}
+import { sudtApi } from '@/app/components/apiClient'
+import { useAccount } from '@/app/hooks/useAccount'
 
 export default function TransactionDetail({
   params,
@@ -19,15 +14,24 @@ export default function TransactionDetail({
   params: { txHash: string }
 }) {
   const router = useRouter()
+  const { addressHash } = useAccount()
   const {
-    data: tx,
+    data: txs,
     error,
     isLoading,
-  } = useSWR(['transaction', params.txHash], () => fetchTx(params.txHash))
+  } = useSWR(['transaction'], () =>
+    sudtApi.account.transferHistory(addressHash),
+  )
 
   if (isLoading) {
     return <>loading...</>
   }
+
+  if (!txs) {
+    return <>not found transaction</>
+  }
+
+  const tx = txs.find((tx) => tx.txHash === params.txHash)
 
   if (!tx) {
     return <>not found transaction</>

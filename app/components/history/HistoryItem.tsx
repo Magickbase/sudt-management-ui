@@ -22,7 +22,10 @@ export const HistoryItem: FC<HistoryItemProps> = ({
   ...attrs
 }) => {
   const { addressList } = useAccount()
-  const primaryAddress = addressList[0]?.address
+  const addressMap: Record<string, boolean> = addressList.reduce(
+    (a, b) => ({ ...a, [b.address]: true }),
+    {},
+  )
 
   const displayCells =
     transaction.type === 'from'
@@ -34,10 +37,10 @@ export const HistoryItem: FC<HistoryItemProps> = ({
     udts: { symbol: string; amount: string }[]
   } = (() => {
     const selfInputs = transaction.displayInputs.filter(
-      (cell) => cell.addressHash === primaryAddress,
+      (cell) => addressMap[cell.address],
     )
     const selfOutputs = transaction.displayOutputs.filter(
-      (cell) => cell.addressHash === primaryAddress,
+      (cell) => addressMap[cell.address],
     )
 
     const ckbInputAmount = selfInputs.reduce((a, b) => {
@@ -121,7 +124,7 @@ export const HistoryItem: FC<HistoryItemProps> = ({
       </div>
       <div className="text-secondary-color">
         {TYPE_LABEL_MAP[transaction.type]}:{' '}
-        {ellipsisTextMiddle(displayCells[0].addressHash)}{' '}
+        {ellipsisTextMiddle(displayCells[0].address)}{' '}
         {displayCells.length > 1 && `(+${displayCells.length - 1} Addresses)`}
       </div>
       <div className="flex flex-col gap-1 border-t-[1px] border-solid border-secondary-color pt-2 mt-2">

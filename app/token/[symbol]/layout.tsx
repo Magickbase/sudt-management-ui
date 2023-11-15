@@ -1,13 +1,14 @@
 'use client'
 import useSWR from 'swr'
-import React, { cloneElement } from 'react'
-import { MOCK_TOKENS } from '@/app/mock'
+import React from 'react'
 import { TokenContextProvider } from '@/app/hooks/useToken'
+import { sudtApi } from '@/app/components/apiClient'
+import { useAccount } from '@/app/hooks/useAccount'
 
-async function fetchToken(symbol: string) {
-  const tx = MOCK_TOKENS.find((token) => token.symbol === symbol)
-  return tx
-}
+// async function fetchToken(symbol: string) {
+//   const tx = MOCK_TOKENS.find((token) => token.symbol === symbol)
+//   return tx
+// }
 
 export default function TokenDetailLayout({
   params,
@@ -15,9 +16,11 @@ export default function TokenDetailLayout({
 }: React.PropsWithChildren<{
   params: { symbol: string }
 }>) {
-  const { data: token, isLoading } = useSWR(['token', params.symbol], () =>
-    fetchToken(params.symbol),
+  const { addressHash } = useAccount()
+  const { data: tokens, isLoading } = useSWR(['token'], () =>
+    sudtApi.token.list({ addressHash }),
   )
+  const token = tokens?.find((token) => token.symbol === params.symbol)
 
   if (isLoading) {
     return <>loading...</>
