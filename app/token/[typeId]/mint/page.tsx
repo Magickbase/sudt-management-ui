@@ -5,11 +5,7 @@ import { useAccount } from '@/app/hooks/useAccount'
 import { sudtApi } from '@/app/components/apiClient'
 import { transformTx } from '@/app/utils/tx'
 
-export default function TokenMint({
-  params,
-}: React.PropsWithChildren<{
-  params: { typeId: string }
-}>) {
+export default function TokenMint({ params }: { params: { typeId: string } }) {
   const account = useAccount()
   return (
     <>

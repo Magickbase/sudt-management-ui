@@ -1,5 +1,4 @@
 'use client'
-import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { PageHeader } from '@/app/components/header'
 import { TokenInfomationForm } from '@/app/components/token/TokenInfomationForm'
@@ -8,9 +7,9 @@ import { sudtApi } from '@/app/components/apiClient'
 
 export default function TokenInfomationModify({
   params,
-}: React.PropsWithChildren<{
+}: {
   params: { typeId: string }
-}>) {
+}) {
   const router = useRouter()
   const { token } = useToken()
   return (
