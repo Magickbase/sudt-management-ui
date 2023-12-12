@@ -57,7 +57,4 @@ const options = {
   origin: process.env.NEXT_PUBLIC_API_ENDPOINT || '/',
 }
 
-export const sudtApi =
-  process.env.NEXT_PUBLIC_MOCK_API === 'true'
-    ? new MockApi(options)
-    : new SUDTApi(options)
+export const sudtApi = new SUDTApi(options)
