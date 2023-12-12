@@ -3,11 +3,12 @@ import {
   Assets,
   AddressHashParams,
   TokenCreateData,
+  TokenUpdateData,
   TokenTransferParams,
   TokenMintParams,
   Transaction,
+  ServerTransaction,
 } from '@/app/type'
-import { RawTransaction } from '@ckb-lumos/base'
 import { APIClient, APIClientOptions } from './base'
 import { MockApi } from './mock'
 
@@ -21,19 +22,24 @@ export class SUDTApi extends APIClient {
       this.get<Token[]>(`/token?${new URLSearchParams(params)}`),
     detail: (args: string) => this.get<Token>(`/token/${args}`),
     create: (data: TokenCreateData) =>
-      this.post<TokenCreateData, RawTransaction>('/token', data),
-    update: (data: TokenCreateData) =>
-      this.put<TokenCreateData, Token>('/token', data),
-    transfer: (data: TokenTransferParams) =>
-      this.post<TokenTransferParams, RawTransaction>('/token/transfer', data),
+      this.post<TokenCreateData, ServerTransaction>('/token', data),
+    update: (typeId: string, data: TokenUpdateData) =>
+      this.put<TokenUpdateData, Token>(`/token/${typeId}`, data),
+    transfer: (typeId: string, data: TokenTransferParams) =>
+      this.post<TokenTransferParams, ServerTransaction>(
+        `/token/send/${typeId}/`,
+        data,
+      ),
     mint: (typeId: string, params: TokenMintParams) =>
-      this.post<TokenMintParams, RawTransaction>(
+      this.post<TokenMintParams, ServerTransaction>(
         `/token/mint/${typeId}/`,
         params,
       ),
   }
 
   account = {
+    meta: (addressHash: string) =>
+      this.get<{ capacity: string }>(`/account/meta/${addressHash}`),
     asyncAddress: (addressHash: string, addresses: string[]) =>
       this.post(`/account/${addressHash}`, { addresses }),
     listAssets: (addressHash: string) =>

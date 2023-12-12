@@ -10,8 +10,9 @@ interface AssetListProps
 
 export const AssetList: FC<AssetListProps> = ({ className, ...attrs }) => {
   const { addressHash } = useAccount()
-  const { data: assets } = useSWR(['assets'], () =>
-    sudtApi.account.listAssets(addressHash),
+  const { data: assets } = useSWR(
+    addressHash ? ['assets', addressHash] : null,
+    () => sudtApi.account.listAssets(addressHash),
   )
 
   if (!assets) {

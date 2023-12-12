@@ -1,20 +1,23 @@
 'use client'
 import { PageHeader } from '@/app/components/header'
+import { TokenMintForm } from '@/app/components/token/TokenMintForm'
+import { useAccount } from '@/app/hooks/useAccount'
 import { sudtApi } from '@/app/components/apiClient'
-import { SendForm } from './SendForm'
 import { transformTx } from '@/app/utils/tx'
-import { useAccount } from '../hooks/useAccount'
 
-export default function SendPage({}: {}) {
+export default function TokenMint({
+  params,
+}: React.PropsWithChildren<{
+  params: { typeId: string }
+}>) {
   const account = useAccount()
   return (
     <>
-      <PageHeader title="Send" />
-      <SendForm
+      <PageHeader title="Modify Token Information" />
+      <TokenMintForm
         onSubmit={(data) =>
           sudtApi.token
-            .transfer(data.typeId, {
-              from: [account.addressHash],
+            .mint(params.typeId, {
               to: data.to,
               amount: data.amount,
             })
@@ -24,9 +27,9 @@ export default function SendPage({}: {}) {
                   {
                     ...transformTx(res),
                     fee: '1000',
-                    description: `Transfer ${data.amount} ${data.typeId} to ${data.to}`,
+                    description: `Mint Token to ${data.to}`,
                   },
-                  `Transfer ${data.amount} ${data.typeId} to ${data.to}`,
+                  `Mint Token to ${data.to}`,
                   'signAndSend',
                 )
                 .then((res) => {

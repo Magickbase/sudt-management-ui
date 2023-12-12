@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { AssetList } from './components/asset/AssetList'
 import { Tabs } from './components/tabs'
@@ -15,21 +15,20 @@ import { sudtApi } from './components/apiClient'
 export default function Home() {
   const [selectedIndex, setSelectedIndex] = useState(0)
   const account = useAccount()
-  const { data: assets } = useSWR(['assets'], () =>
-    sudtApi.account.listAssets(account.addressHash),
+  const { data: meta } = useSWR(
+    account.addressHash ? ['meta', account.addressHash] : null,
+    () => sudtApi.account.meta(account.addressHash),
   )
 
   if (!account.isConnected) {
     return <ConnectAccount />
   }
 
-  const ckbBalance = assets?.find((asset) => asset.uan === 'CKB')?.amount || '0'
-
   return (
     <>
       <div className="flex flex-col gap-4">
         <div className="text-center text-highlight-color text-2xl font-medium">
-          {formatAmount(ckbBalance, '8')} CKB
+          {formatAmount(meta?.capacity || '0', '8')} CKB
         </div>
 
         <NetworkSwitch />
@@ -39,10 +38,10 @@ export default function Home() {
             <img src="/icons/send.svg" alt="send" />
             <div className="font-medium text-highlight-color">Send</div>
           </Link>
-          <button>
+          <Link className="flex flex-col items-center" href="/receive">
             <img src="/icons/receive.svg" alt="receive" />
             <div className="font-medium text-highlight-color">Receive</div>
-          </button>
+          </Link>
           <Link className="flex flex-col items-center" href="/create">
             <img src="/icons/create.svg" alt="create" />
             <div className="font-medium text-highlight-color">Create</div>

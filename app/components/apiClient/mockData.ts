@@ -1,5 +1,5 @@
-import type { Transaction, Assets, Token } from '@/app/type'
-import type { RawTransaction } from '@ckb-lumos/base'
+import type { Transaction, Assets, Token, ServerTransaction } from '@/app/type'
+// import type { RawTransaction } from '@ckb-lumos/base'
 
 export const MOCK_ACCOUNTS: {
   [namke: string]: Record<'address' | 'balance', string>
@@ -28,24 +28,28 @@ export const MOCK_ACCOUNTS: {
 
 export const MOCK_ASSETS: Assets[] = [
   {
+    typeId: '1',
     displayName: 'CKB',
     uan: 'CKB',
     decimal: '8',
     amount: '10000000000',
   },
   {
+    typeId: '2',
     displayName: 'SUDT1',
     uan: 'SUDT1',
     decimal: '8',
     amount: '10000000000',
   },
   {
+    typeId: '3',
     displayName: 'SUDT2',
     uan: 'SUDT2',
     decimal: '8',
     amount: '20000000000',
   },
   {
+    typeId: '4',
     displayName: 'SUDT3',
     uan: 'SUDT3',
     decimal: '8',
@@ -59,11 +63,15 @@ export const MOCK_TOKENS: Token[] = [
     decimal: '8',
     name: 'Demo Simple User Define Token',
     email: '123@gmail.com',
+    typeId: '1',
+    amount: '10000',
     description: '',
     website: '',
     icon: '',
   },
   {
+    typeId: '2',
+    amount: '10000',
     symbol: 'SUDT2',
     decimal: '8',
     name: 'Demo Simple User Define Token',
@@ -73,6 +81,8 @@ export const MOCK_TOKENS: Token[] = [
     icon: '',
   },
   {
+    typeId: '3',
+    amount: '10000',
     symbol: 'SUDT3',
     decimal: '8',
     name: 'Demo Simple User Define Token',
@@ -83,75 +93,89 @@ export const MOCK_TOKENS: Token[] = [
   },
 ]
 
-export const MOCK_RAW_TRANSACTION: RawTransaction = {
-  version: '0x0',
+export const MOCK_RAW_TRANSACTION: ServerTransaction = {
   cellDeps: [
     {
       outPoint: {
         txHash:
-          '0xbcdb11e9815b3d9fb6278af097e2ae54fe4f8c9c97d352d8a15538ed0398ac83',
-        index: '0x1',
+          '0xec26b0f85ed839ece5f11c4c4e837ec359f5adc4420410f6453b1f6b60fb96a6',
+        index: '0x0',
       },
       depType: 'depGroup',
     },
     {
       outPoint: {
         txHash:
-          '0xbcdb11e9815b3d9fb6278af097e2ae54fe4f8c9c97d352d8a15538ed0398ac83',
+          '0xe12877ebd2c3c364dc46c5c992bcfaf4fee33fa13eebdf82c591fc9825aab769',
         index: '0x0',
       },
-      depType: 'depGroup',
+      depType: 'code',
     },
   ],
   headerDeps: [],
   inputs: [
     {
-      since: '0x0',
-      previousOutput: {
-        txHash:
-          '0xa401e0b880329ea492e95f3fc085fe03e33a66f5e010aadbf8fcd0d5ecc09e5f',
-        index: '0x0',
+      cellOutput: {
+        capacity: '0x90fcedc3f20',
+        lock: {
+          codeHash:
+            '0x3419a1c09eb2567f6552ee7a8ecffd64155cffe0f1796e6e61ec088d740c1356',
+          hashType: 'type',
+          args: '0x1b3e74a036a21f94eba3d7c94b9d5619e1e84f7c',
+        },
       },
-    },
-    {
-      since: '0x0',
-      previousOutput: {
+      data: '0x',
+      outPoint: {
         txHash:
-          '0x3fdc5faa485a9687dcf7b12445cb77376798cbbc6efbc9fd5e8e22589c385921',
+          '0x6827d1fb91b10d589303e66ec574bde9f4b1ca6eacbd05c475cd194391e6fc78',
         index: '0x1',
       },
+      blockNumber: '0xb0d5de',
     },
   ],
   outputs: [
     {
-      capacity: '0x2540be400',
-      lock: {
-        codeHash:
-          '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
-        hashType: 'type',
-        args: '0x6cd8ae51f91bacd7910126f880138b30ac5d3015',
+      cellOutput: {
+        capacity: '0x34e62ce00',
+        lock: {
+          codeHash:
+            '0x3419a1c09eb2567f6552ee7a8ecffd64155cffe0f1796e6e61ec088d740c1356',
+          hashType: 'type',
+          args: '0x1b3e74a036a21f94eba3d7c94b9d5619e1e84f7c',
+        },
+        type: {
+          codeHash:
+            '0xc5e5dcf215925f7ef4dfaf5f4b4f105bc321c02776d6e7d52a1db3fcd9d011a4',
+          hashType: 'type',
+          args: '0x0226fc667898d411d97a2603210b3636737b18b8d36bebad98c3eeca7562acdb',
+        },
       },
+      data: '0xa0860100000000000000000000000000',
     },
     {
-      capacity: '0x5af0bc6e5c00',
-      lock: {
-        codeHash:
-          '0x5c5069eb0857efc65e1bca0c07df34c31663b3622fd3876c876320fc9634e2a8',
-        hashType: 'type',
-        args: '0x8bebce3e7dd7b7179defe4d06ecf9776b1ba686d',
+      cellOutput: {
+        lock: {
+          codeHash:
+            '0x3419a1c09eb2567f6552ee7a8ecffd64155cffe0f1796e6e61ec088d740c1356',
+          hashType: 'type',
+          args: '0x1b3e74a036a21f94eba3d7c94b9d5619e1e84f7c',
+        },
+        capacity: '0x90c8077ea80',
       },
-    },
-    {
-      capacity: '0x1bc0b78127dd9f00',
-      lock: {
-        codeHash:
-          '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
-        hashType: 'type',
-        args: '0xe390d4b9b4c7637ec80799bdaf644ae625cdb922',
-      },
+      data: '0x',
     },
   ],
-  outputsData: ['0x', '0x', '0x'],
+  witnesses: [
+    '0x55000000100000005500000055000000410000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+  ],
+  fixedEntries: [
+    {
+      field: 'outputs',
+      index: 0,
+    },
+  ],
+  signingEntries: [],
+  inputSinces: {},
 }
 
 export const MOCK_TRANSACTION: Transaction[] = [

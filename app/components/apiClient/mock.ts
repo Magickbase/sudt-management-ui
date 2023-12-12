@@ -3,7 +3,7 @@ import {
   TokenCreateData,
   TokenTransferParams,
   TokenMintParams,
-  History,
+  TokenUpdateData,
 } from '@/app/type'
 import { APIClient } from './base'
 import {
@@ -19,10 +19,8 @@ export class MockApi extends APIClient {
     detail: (args: string) =>
       Promise.resolve(MOCK_TOKENS.find((token) => token.symbol === args)),
     create: (_: TokenCreateData) => Promise.resolve(MOCK_RAW_TRANSACTION),
-    update: (data: TokenCreateData) =>
-      Promise.resolve(
-        MOCK_TOKENS.find((token) => token.symbol === data.symbol),
-      ),
+    update: (typeId: string, data: TokenUpdateData) =>
+      Promise.resolve(MOCK_TOKENS.find((token) => token.typeId === typeId)),
     transfer: (_: TokenTransferParams) => Promise.resolve(MOCK_RAW_TRANSACTION),
     mint: (_: string, __: TokenMintParams) =>
       Promise.resolve(MOCK_RAW_TRANSACTION),

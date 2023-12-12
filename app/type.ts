@@ -1,3 +1,5 @@
+import type { TransactionSkeletonObject } from '@ckb-lumos/helpers'
+
 export type TransactionNormalCell = {
   cellType: 'normal'
   address: string
@@ -28,6 +30,11 @@ export interface Transaction {
   displayOutputs: TransactionCell[]
 }
 
+export interface ServerTransaction
+  extends Omit<TransactionSkeletonObject, 'inputSinces' | 'cellProvider'> {
+  inputSinces: Record<string, string>
+}
+
 export const TYPE_LABEL_MAP = {
   from: 'From',
   to: 'To',
@@ -39,16 +46,20 @@ export type Assets = {
   decimal: string
   displayName: string
   uan: string
+  typeId: string
 }
 
 export type Token = {
   symbol: string
   decimal: string
+  typeId: string
   name: string
   email: string
   description: string
+  amount: string
   website: string
   icon: string
+  explorerUrl?: string
 }
 
 export namespace WalletConnect {
@@ -78,30 +89,25 @@ export interface AddressHashParams {
 
 export type TokenCreateData = {
   name: string
-  symbol: string
-  supply: string
   account: string // the address of owner
   decimal: string
   description: string
   website: string
   icon: string
-  typeId: string
-  explorerCode: string
-  args: string // the args of sudt type script
-  uan: string
-  displayName: string
+  amount: string
   email: string
+  explorerCode?: string
 }
 
+export type TokenUpdateData = Omit<TokenCreateData, 'account'>
+
 export type TokenTransferParams = {
-  addressHash: string
-  token: string // token args
+  from: string[]
   amount: string
   to: string
 }
 
 export type TokenMintParams = {
-  from: string[]
   to: string
   amount: string
 }
