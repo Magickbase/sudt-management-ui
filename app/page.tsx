@@ -20,10 +20,6 @@ export default function Home() {
     () => sudtApi.account.meta(account.addressHash),
   )
 
-  if (!account.isConnected) {
-    return <ConnectAccount />
-  }
-
   return (
     <>
       <div className="flex flex-col gap-4">

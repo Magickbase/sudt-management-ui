@@ -13,9 +13,12 @@ export default function TokenDetailLayout({
   params: { typeId: string }
 }>) {
   const { addressHash } = useAccount()
-  const { data: tokens, isLoading } = useSWR(['token'], () =>
-    sudtApi.token.list({ addressHash }),
-  )
+  const {
+    data: tokens,
+    error,
+    isLoading,
+  } = useSWR(['tokens', addressHash], () => sudtApi.token.list({ addressHash }))
+
   const token = tokens?.find((token) => token.typeId === params.typeId)
 
   if (isLoading) {

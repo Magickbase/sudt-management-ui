@@ -30,7 +30,7 @@ export const AccountContext = createContext<{
     transaction: Transaction,
     description?: string,
     actionType?: 'sign' | 'signAndSend',
-  ) => Promise<SignedTransaction | undefined>
+  ) => Promise<SignedTransaction['transaction'] | undefined>
 }>({
   id: null,
   name: DEFAULT_ACCOUNT_NAME,
@@ -119,7 +119,6 @@ export const AccountContextProvider = ({
   }
 
   const connect = async () => {
-    console.log('useAccount connect')
     if (!provider) {
       throw new Error('Provider is not found')
     }
@@ -129,9 +128,7 @@ export const AccountContextProvider = ({
     })
     await web3Modal.openModal({ uri })
 
-    console.log('await approval.....')
     const session = await approval()
-    console.log('approvaled!', session)
 
     if (session) {
       web3Modal.closeModal()
@@ -155,7 +152,7 @@ export const AccountContextProvider = ({
     transaction: Transaction,
     description: string = '',
     actionType: 'sign' | 'signAndSend' = 'sign',
-  ) => {
+  ): Promise<SignedTransaction['transaction'] | undefined> => {
     if (!account || !chainId || !provider) return
     try {
       const res = await provider.signTransaction({
@@ -163,7 +160,7 @@ export const AccountContextProvider = ({
         description,
         actionType,
       })
-      return res.transaction
+      return res.transaction as SignedTransaction['transaction'] | undefined
     } catch (e) {
       console.error(`Failed to sign a transaction: ${e}`)
     }

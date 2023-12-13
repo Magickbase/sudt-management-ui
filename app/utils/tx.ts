@@ -1,7 +1,14 @@
 import { ServerTransaction } from '@/app/type'
-import { Script } from '@ckb-lumos/base'
+import { Script, DepType } from '@ckb-lumos/base'
 import { computeScriptHash as scriptToHash } from '@ckb-lumos/base/lib/utils'
-import type { Transaction } from '@ckb-connect/walletconnect-dapp-sdk'
+import { CKBComponents } from '@ckb-lumos/rpc/lib/types/api'
+import { ParamsFormatter } from '@ckb-lumos/rpc'
+import { BI } from '@ckb-lumos/bi'
+
+import type {
+  Transaction,
+  SignedTransaction,
+} from '@ckb-connect/walletconnect-dapp-sdk'
 
 type TransactionScript = Transaction['inputs'][number]['lock']
 
@@ -39,5 +46,35 @@ export function transformTx(txSkeleton: ServerTransaction): Transaction {
     })),
     outputsData: txSkeleton.outputs.map((output) => output.data),
     witnesses: txSkeleton.witnesses,
+  }
+}
+
+export function transformSignedTx(
+  signedTx: SignedTransaction['transaction'],
+): CKBComponents.RawTransaction {
+  return {
+    version: '0x0',
+    cellDeps: signedTx.cellDeps.map((cellDep) => ({
+      outPoint: {
+        index: ParamsFormatter.toHash(cellDep.outPoint.index),
+        txHash: cellDep.outPoint.txHash,
+      },
+      depType: cellDep.depType as DepType,
+    })),
+    headerDeps: signedTx.headerDeps,
+    inputs: signedTx.inputs.map((input) => ({
+      previousOutput: {
+        index: ParamsFormatter.toHash(input.previousOutput.index),
+        txHash: input.previousOutput.txHash,
+      },
+      since: ParamsFormatter.toHash(input.since),
+    })),
+    outputs: signedTx.outputs.map((output) => ({
+      capacity: BI.from(parseInt(output.capacity)).toHexString(),
+      lock: output.lock,
+      type: output.type,
+    })),
+    outputsData: signedTx.outputsData,
+    witnesses: signedTx.witnesses,
   }
 }

@@ -23,7 +23,7 @@ export const TokenItem: FC<TokenItemProps> = ({
       <img src="/icons/open.svg" alt="open" />
     </Link>
     <div className="ml-auto flex gap-1 text-primary-color">
-      <a className="cursor-pointer">Distribution</a>
+      {/* <a className="cursor-pointer">Distribution</a> */}
       <Link href={`/token/${token.typeId}`}>View</Link>
       <Link href={`/token/${token.typeId}/modify`}>Modify</Link>
       <Link href={`/token/${token.typeId}/mint`}>Mint</Link>

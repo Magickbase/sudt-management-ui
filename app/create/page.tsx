@@ -2,11 +2,12 @@
 import { PageHeader } from '@/app/components/header'
 import { sudtApi } from '@/app/components/apiClient'
 import { useAccount } from '@/app/hooks/useAccount'
-import { transformTx } from '@/app/utils/tx'
 import { TokenInfomationForm } from '@/app/components/token/TokenInfomationForm'
+import { useRpc } from '@/app/hooks/useRPC'
 
 export default function CreatePage({}: {}) {
   const account = useAccount()
+  const { signAndSendTx } = useRpc()
   return (
     <>
       <PageHeader title="Create UDT" />
@@ -23,20 +24,8 @@ export default function CreatePage({}: {}) {
               amount: data.amount,
               email: data.email,
             })
-            .then((res) => {
-              account
-                .signTransaction(
-                  {
-                    ...transformTx(res),
-                    fee: '1000',
-                    description: 'Create Token',
-                  },
-                  'Create Token',
-                  'signAndSend',
-                )
-                .then((res) => {
-                  console.log(res)
-                })
+            .then(async (res) => {
+              signAndSendTx(res, 'Create Token')
             })
         }
       />

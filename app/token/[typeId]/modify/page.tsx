@@ -4,6 +4,9 @@ import { PageHeader } from '@/app/components/header'
 import { TokenInfomationForm } from '@/app/components/token/TokenInfomationForm'
 import { useToken } from '@/app/hooks/useToken'
 import { sudtApi } from '@/app/components/apiClient'
+import { toast } from 'react-hot-toast'
+import { useSWRConfig } from 'swr'
+import { useAccount } from '@/app/hooks/useAccount'
 
 export default function TokenInfomationModify({
   params,
@@ -11,6 +14,8 @@ export default function TokenInfomationModify({
   params: { typeId: string }
 }) {
   const router = useRouter()
+  const { addressHash } = useAccount()
+  const { mutate } = useSWRConfig()
   const { token } = useToken()
   return (
     <>
@@ -29,6 +34,8 @@ export default function TokenInfomationModify({
               email: data.email,
             })
             .then(() => {
+              toast.success('Modify Token Information Success!')
+              mutate(['tokens', addressHash])
               router.back()
             })
         }

@@ -5,6 +5,7 @@ import QRCode from 'react-qr-code'
 import { useAccount } from '../hooks/useAccount'
 import { useCopyToClipboard } from '@uidotdev/usehooks'
 import { Button } from '@/app/components/button'
+import { toast } from 'react-hot-toast'
 
 export default function ReceivePage({}: {}) {
   const router = useRouter()
@@ -21,7 +22,14 @@ export default function ReceivePage({}: {}) {
         <p className="break-all text-center mb-4">{account.addressHash}</p>
         <div className="flex items-center mb-4 text-primary-color cursor-pointer">
           <img className="mr-2" src="/icons/copy.svg" alt="copy" />
-          <a onClick={() => copyToClipboard(account.addressHash)}>Copy</a>
+          <a
+            onClick={() => {
+              copyToClipboard(account.addressHash)
+              toast.success('Copied!')
+            }}
+          >
+            Copy
+          </a>
         </div>
 
         <Button primary block onClick={() => router.back()}>
