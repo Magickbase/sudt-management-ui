@@ -10,7 +10,7 @@ import {
   ServerTransaction,
 } from '@/app/type'
 import { APIClient, APIClientOptions } from './base'
-import { MockApi } from './mock'
+import { MOCK_TRANSACTION } from './mockData'
 
 export class SUDTApi extends APIClient {
   constructor(opts: APIClientOptions) {
@@ -44,10 +44,12 @@ export class SUDTApi extends APIClient {
       this.post(`/account/${addressHash}`, { addresses }),
     listAssets: (addressHash: string) =>
       this.get<Assets[]>(`/account/${addressHash}/assets`),
-    transferHistory: (addressHash: string) =>
-      this.get<Transaction[]>(
-        `/account/${addressHash}/assets/transfer/history`,
-      ),
+
+    transferHistory: (addressHash: string) => Promise.resolve(MOCK_TRANSACTION),
+    // transferHistory: (addressHash: string) =>
+    //   this.get<Transaction[]>(
+    //     `/account/${addressHash}/assets/transaction`,
+    //   ),
   }
 }
 

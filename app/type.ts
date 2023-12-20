@@ -30,6 +30,29 @@ export interface Transaction {
   displayOutputs: TransactionCell[]
 }
 
+export interface TransactionHistoryCell {
+  typeId: string
+  amount: string
+  address: string
+  token: {
+    name: string
+    decimal: string
+  }
+}
+
+export interface TransactionHistoryWrapper {
+  lastCursor: string
+  history: TransactionHistory[]
+}
+
+export interface TransactionHistory {
+  txHash: string
+  list: {
+    from: TransactionHistoryCell[]
+    to: TransactionHistoryCell[]
+  }[]
+}
+
 export interface ServerTransaction
   extends Omit<TransactionSkeletonObject, 'inputSinces' | 'cellProvider'> {
   inputSinces: Record<string, string>

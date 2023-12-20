@@ -19,9 +19,12 @@ export const TokenItem: FC<TokenItemProps> = ({
     } w-full flex items-center bg-lighter-color p-3 rounded-lg text-sm`}
   >
     <span>{token.symbol}</span>
-    <Link className="ml-1" href={`/token/${token.typeId}`}>
-      <img src="/icons/open.svg" alt="open" />
-    </Link>
+
+    {token.explorerUrl && (
+      <Link className="ml-1" href={token.explorerUrl} target="_blank">
+        <img src="/icons/open.svg" alt="open" />
+      </Link>
+    )}
     <div className="ml-auto flex gap-1 text-primary-color">
       {/* <a className="cursor-pointer">Distribution</a> */}
       <Link href={`/token/${token.typeId}`}>View</Link>
