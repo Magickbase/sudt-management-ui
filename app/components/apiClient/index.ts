@@ -10,7 +10,6 @@ import {
   ServerTransaction,
 } from '@/app/type'
 import { APIClient, APIClientOptions } from './base'
-import { MOCK_TRANSACTION } from './mockData'
 
 export class SUDTApi extends APIClient {
   constructor(opts: APIClientOptions) {
