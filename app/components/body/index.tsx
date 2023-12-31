@@ -9,7 +9,6 @@ const inter = Inter({ subsets: ['latin'] })
 
 export function Body({ children }: { children: React.ReactNode }) {
   const account = useAccount()
-  console.log(account.addressHash)
 
   return (
     <body className={inter.className}>

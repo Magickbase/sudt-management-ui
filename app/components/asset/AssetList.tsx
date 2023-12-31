@@ -4,6 +4,7 @@ import { AssetItem } from './AssetItem'
 import useSWR from 'swr'
 import { sudtApi } from '../apiClient'
 import { useAccount } from '@/app/hooks/useAccount'
+import Link from 'next/link'
 
 interface AssetListProps
   extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {}
@@ -22,7 +23,9 @@ export const AssetList: FC<AssetListProps> = ({ className, ...attrs }) => {
   return (
     <div {...attrs} className={classnames(className, 'gap-2 flex flex-col')}>
       {assets.map((asset) => (
-        <AssetItem key={asset.uan} asset={asset} />
+        <Link href={`/token/${asset.typeId}`} key={asset.uan}>
+          <AssetItem asset={asset} />
+        </Link>
       ))}
     </div>
   )

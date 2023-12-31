@@ -58,6 +58,29 @@ export interface ServerTransaction
   inputSinces: Record<string, string>
 }
 
+export type UdtCell = {
+  address: string
+  amount: string
+  typeId: string
+  ckb: string
+  token: Token
+}
+
+export type NormalCell = {
+  address: string
+  ckb: string
+  amount: undefined
+  typeId: undefined
+  token: undefined
+}
+
+export type HistoryCell = UdtCell | NormalCell
+export interface ServerHistory {
+  txHash: string
+  from: HistoryCell[]
+  to: HistoryCell[]
+}
+
 export const TYPE_LABEL_MAP = {
   from: 'From',
   to: 'To',
@@ -82,6 +105,7 @@ export type Token = {
   amount: string
   website: string
   icon: string
+  owner: string
   explorerUrl?: string
 }
 

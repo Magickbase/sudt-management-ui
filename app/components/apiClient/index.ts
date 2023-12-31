@@ -6,7 +6,7 @@ import {
   TokenUpdateData,
   TokenTransferParams,
   TokenMintParams,
-  Transaction,
+  ServerHistory,
   ServerTransaction,
 } from '@/app/type'
 import { APIClient, APIClientOptions } from './base'
@@ -45,11 +45,13 @@ export class SUDTApi extends APIClient {
     listAssets: (addressHash: string) =>
       this.get<Assets[]>(`/account/${addressHash}/assets`),
 
-    transferHistory: (addressHash: string) => Promise.resolve(MOCK_TRANSACTION),
-    // transferHistory: (addressHash: string) =>
-    //   this.get<Transaction[]>(
-    //     `/account/${addressHash}/assets/transaction`,
-    //   ),
+    transferHistory: (addressHash: string) =>
+      this.get<{
+        lastCursor: string
+        history: ServerHistory[]
+      }>(`/account/${addressHash}/assets/transaction`).then(
+        (res) => res.history,
+      ),
   }
 }
 

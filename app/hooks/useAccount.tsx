@@ -2,7 +2,6 @@
 
 import { useState, useContext, createContext, useMemo, useEffect } from 'react'
 import { Web3Modal } from '@web3modal/standalone'
-import { utils } from '@ckb-lumos/base'
 import { WalletConnect } from '@/app/type'
 import {
   type Address,
@@ -11,6 +10,7 @@ import {
   CkbWCSdk,
 } from '@ckb-connect/walletconnect-dapp-sdk'
 import { WC_ID, NETWORK, CODE_HASH_LIST, DEFAULT_ACCOUNT_NAME } from '../utils'
+import toast from 'react-hot-toast'
 
 const CHAIN_ID = 'ckb:testnet'
 // TODO: use omnilock once neuron is ready
@@ -77,7 +77,7 @@ export const AccountContextProvider = ({
     return { chainId: `${chain}:${network}`, accountId }
   }, [primaryAccount])
 
-  const isConnected = !!chainId
+  const isConnected = !!chainId && !!addressHash
 
   const web3Modal = new Web3Modal({
     projectId: WC_ID!,
@@ -109,6 +109,10 @@ export const AccountContextProvider = ({
       })
       const list = result[LOCK_SCRIPT_CODE_HASH] ?? []
 
+      if (list.length === 0) {
+        toast.error('No address found, please create one first.')
+        disconnect()
+      }
       setAddressList(list)
 
       return list
@@ -154,16 +158,12 @@ export const AccountContextProvider = ({
     actionType: 'sign' | 'signAndSend' = 'sign',
   ): Promise<SignedTransaction['transaction'] | undefined> => {
     if (!account || !chainId || !provider) return
-    try {
-      const res = await provider.signTransaction({
-        transaction,
-        description,
-        actionType,
-      })
-      return res.transaction as SignedTransaction['transaction'] | undefined
-    } catch (e) {
-      console.error(`Failed to sign a transaction: ${e}`)
-    }
+    const res = await provider.signTransaction({
+      transaction,
+      description,
+      actionType,
+    })
+    return res.transaction as SignedTransaction['transaction'] | undefined
   }
 
   useEffect(() => {

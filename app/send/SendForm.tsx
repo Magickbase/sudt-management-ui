@@ -14,6 +14,7 @@ type FormData = {
 }
 
 interface SendFormProps {
+  defaultValues?: Partial<FormData>
   onSubmit: (data: FormData) => void
 }
 
@@ -23,7 +24,7 @@ export function SendForm(props: SendFormProps) {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<FormData>()
+  } = useForm<FormData>({ defaultValues: props.defaultValues })
 
   const { addressHash } = useAccount()
   const { data: assets, isLoading } = useSWR(
