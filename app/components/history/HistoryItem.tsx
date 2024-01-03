@@ -189,8 +189,7 @@ export const HistoryItem: FC<HistoryItemProps> = ({
         {bills.udts.map((udt) => (
           <div className="ml-auto text-highlight-color" key={udt.typeId}>
             {udt.amount[0] === '-' ? '' : '+'}
-            {formatAmount(udt.amount, udtMaps[udt.typeId]!.decimal)}{' '}
-            {udtMaps[udt.typeId]!.name}
+            {udt.amount} {udtMaps[udt.typeId]!.name}
           </div>
         ))}
         <div className="ml-auto text-secondary-color text-xs">
