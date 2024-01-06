@@ -16,11 +16,7 @@ export function isAPIError(reason: unknown): reason is APIError {
 
 export type FetchLike<R extends any = any> = (
   input: string,
-  init?: {
-    method?: string
-    body?: string
-    headers: { [key in string]: string }
-  },
+  init?: NodeJS.fetch.RequestInit,
 ) => Promise<{
   status: number
   json(): Promise<R>
@@ -46,22 +42,29 @@ export class APIClient {
     params: P = {} as P,
   ) {
     return new Promise<R>((resolve, reject) => {
-      this.fetch(`${this.origin}/api/${endpoint}`, {
+      const init: NodeJS.fetch.RequestInit = {
         method,
-        body: JSON.stringify({
-          ...params,
-        }),
         headers: {
           'Content-Type': 'application/json',
         },
-      })
+      }
+
+      if (Object.keys(params).length !== 0) {
+        Object.assign(init, {
+          body: JSON.stringify({
+            ...params,
+          }),
+        })
+      }
+
+      this.fetch(`${this.origin}${endpoint}`, init)
         .then(async (res) => {
           const body = res.status === 204 ? null : await res.json()
 
           if (res.status === 200) {
-            resolve(body)
+            resolve(body.data ?? body)
           } else if (res.status === 204) {
-            resolve(body)
+            resolve(body.data ?? body)
           } else {
             reject({
               [API_ERROR]: true,

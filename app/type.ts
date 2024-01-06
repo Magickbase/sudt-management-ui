@@ -1,3 +1,5 @@
+import type { TransactionSkeletonObject } from '@ckb-lumos/helpers'
+
 export type TransactionNormalCell = {
   cellType: 'normal'
   address: string
@@ -28,6 +30,57 @@ export interface Transaction {
   displayOutputs: TransactionCell[]
 }
 
+export interface TransactionHistoryCell {
+  typeId: string
+  amount: string
+  address: string
+  token: {
+    name: string
+    decimal: string
+  }
+}
+
+export interface TransactionHistoryWrapper {
+  lastCursor: string
+  history: TransactionHistory[]
+}
+
+export interface TransactionHistory {
+  txHash: string
+  list: {
+    from: TransactionHistoryCell[]
+    to: TransactionHistoryCell[]
+  }[]
+}
+
+export interface ServerTransaction
+  extends Omit<TransactionSkeletonObject, 'inputSinces' | 'cellProvider'> {
+  inputSinces: Record<string, string>
+}
+
+export type UdtCell = {
+  address: string
+  amount: string
+  typeId: string
+  ckb: string
+  token: Token
+}
+
+export type NormalCell = {
+  address: string
+  ckb: string
+  amount: undefined
+  typeId: undefined
+  token: undefined
+}
+
+export type HistoryCell = UdtCell | NormalCell
+export interface ServerHistory {
+  txHash: string
+  from: HistoryCell[]
+  to: HistoryCell[]
+}
+
 export const TYPE_LABEL_MAP = {
   from: 'From',
   to: 'To',
@@ -39,16 +92,21 @@ export type Assets = {
   decimal: string
   displayName: string
   uan: string
+  typeId: string
 }
 
 export type Token = {
   symbol: string
   decimal: string
+  typeId: string
   name: string
   email: string
   description: string
+  amount: string
   website: string
   icon: string
+  owner: string
+  explorerUrl?: string
 }
 
 export namespace WalletConnect {
@@ -78,30 +136,25 @@ export interface AddressHashParams {
 
 export type TokenCreateData = {
   name: string
-  symbol: string
-  supply: string
   account: string // the address of owner
   decimal: string
   description: string
   website: string
   icon: string
-  typeId: string
-  explorerCode: string
-  args: string // the args of sudt type script
-  uan: string
-  displayName: string
+  amount: string
   email: string
+  explorerCode?: string
 }
 
+export type TokenUpdateData = Omit<TokenCreateData, 'account'>
+
 export type TokenTransferParams = {
-  addressHash: string
-  token: string // token args
+  from: string[]
   amount: string
   to: string
 }
 
 export type TokenMintParams = {
-  from: string[]
   to: string
   amount: string
 }

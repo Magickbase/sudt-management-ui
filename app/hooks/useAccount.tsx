@@ -2,7 +2,6 @@
 
 import { useState, useContext, createContext, useMemo, useEffect } from 'react'
 import { Web3Modal } from '@web3modal/standalone'
-import { utils } from '@ckb-lumos/base'
 import { WalletConnect } from '@/app/type'
 import {
   type Address,
@@ -11,11 +10,12 @@ import {
   CkbWCSdk,
 } from '@ckb-connect/walletconnect-dapp-sdk'
 import { WC_ID, NETWORK, CODE_HASH_LIST, DEFAULT_ACCOUNT_NAME } from '../utils'
+import toast from 'react-hot-toast'
 
 const CHAIN_ID = 'ckb:testnet'
 // TODO: use omnilock once neuron is ready
 const LOCK_SCRIPT_CODE_HASH =
-  '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8'
+  '0x3419a1c09eb2567f6552ee7a8ecffd64155cffe0f1796e6e61ec088d740c1356'
 
 export const AccountContext = createContext<{
   id: string | null
@@ -29,7 +29,8 @@ export const AccountContext = createContext<{
   signTransaction: (
     transaction: Transaction,
     description?: string,
-  ) => Promise<SignedTransaction | undefined>
+    actionType?: 'sign' | 'signAndSend',
+  ) => Promise<SignedTransaction['transaction'] | undefined>
 }>({
   id: null,
   name: DEFAULT_ACCOUNT_NAME,
@@ -58,12 +59,14 @@ export const AccountContextProvider = ({
   const [addressList, setAddressList] = useState<Array<Address>>([])
 
   const addressHash = useMemo(() => {
-    const hasher = new utils.CKBHasher()
-    addressList.forEach(({ address }) => {
-      hasher.update(address)
-    })
+    return addressList[0]?.address
+    // Use only a single address as an identifier
+    // const hasher = new utils.CKBHasher()
+    // addressList.forEach(({ address }) => {
+    //   hasher.update(address)
+    // })
 
-    return hasher.digestHex()
+    // return hasher.digestHex()
   }, [addressList])
 
   const primaryAccount = account?.accounts[0]
@@ -74,7 +77,7 @@ export const AccountContextProvider = ({
     return { chainId: `${chain}:${network}`, accountId }
   }, [primaryAccount])
 
-  const isConnected = !!chainId
+  const isConnected = !!chainId && !!addressHash
 
   const web3Modal = new Web3Modal({
     projectId: WC_ID!,
@@ -99,13 +102,17 @@ export const AccountContextProvider = ({
           page: {
             size: 10,
             before: '',
-            after: addressList[0].address ?? '',
+            after: addressList[0]?.address ?? '',
           },
           type: 'all',
         },
       })
       const list = result[LOCK_SCRIPT_CODE_HASH] ?? []
 
+      if (list.length === 0) {
+        toast.error('No address found, please create one first.')
+        disconnect()
+      }
       setAddressList(list)
 
       return list
@@ -116,7 +123,6 @@ export const AccountContextProvider = ({
   }
 
   const connect = async () => {
-    console.log('useAccount connect')
     if (!provider) {
       throw new Error('Provider is not found')
     }
@@ -126,9 +132,7 @@ export const AccountContextProvider = ({
     })
     await web3Modal.openModal({ uri })
 
-    console.log('await approval.....')
     const session = await approval()
-    console.log('approvaled!', session)
 
     if (session) {
       web3Modal.closeModal()
@@ -151,18 +155,15 @@ export const AccountContextProvider = ({
   const signTransaction = async (
     transaction: Transaction,
     description: string = '',
-  ) => {
+    actionType: 'sign' | 'signAndSend' = 'sign',
+  ): Promise<SignedTransaction['transaction'] | undefined> => {
     if (!account || !chainId || !provider) return
-    try {
-      const res = await provider.signTransaction({
-        transaction,
-        description,
-        actionType: 'sign',
-      })
-      return res.transaction
-    } catch (e) {
-      console.error(`Failed to sign a transaction: ${e}`)
-    }
+    const res = await provider.signTransaction({
+      transaction,
+      description,
+      actionType,
+    })
+    return res.transaction as SignedTransaction['transaction'] | undefined
   }
 
   useEffect(() => {

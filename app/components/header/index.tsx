@@ -1,7 +1,7 @@
 import { useRouter } from 'next/navigation'
 
 interface PageHeaderProps {
-  title: string
+  title?: string
 }
 
 export function PageHeader({ title }: PageHeaderProps) {

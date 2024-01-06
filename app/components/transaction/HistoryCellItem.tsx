@@ -5,35 +5,32 @@ import {
   useMemo,
 } from 'react'
 import classnames from 'classnames'
-import { type TransactionCell } from '@/app/type'
+import { type HistoryCell } from '@/app/type'
 import { parseAmount, formatAmount, ellipsisTextMiddle } from '@/app/utils'
 
-interface TransactionCellProps
+interface HistoryCellProps
   extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
-  cell: TransactionCell
+  cell: HistoryCell
   index: number
 }
 
-export const TransactionCellItem: FC<TransactionCellProps> = ({
+export const HistoryCellItem: FC<HistoryCellProps> = ({
   cell,
   index,
   className,
   ...attrs
 }) => {
   const cellType = useMemo(() => {
-    if (cell.cellType === 'udt') {
-      return cell.extraInfo.symbol
+    if (cell.token !== undefined) {
+      return cell.token.name
     }
 
     return 'CKB Capacity'
   }, [cell])
 
   const cellData = useMemo(() => {
-    if (cell.cellType === 'udt') {
-      return `${parseAmount(
-        cell.extraInfo.amount,
-        cell.extraInfo.decimal,
-      ).toFormat()} Unit`
+    if (cell.token !== undefined) {
+      return `${parseAmount(cell.amount, cell.token.decimal).toFormat()} Unit`
     }
 
     return '-'
@@ -55,7 +52,7 @@ export const TransactionCellItem: FC<TransactionCellProps> = ({
 
       <div className="flex">
         <span className="text-secondary-color">Capacity</span>
-        <span className="ml-auto">{formatAmount(cell.capacity, '8')} CKB</span>
+        <span className="ml-auto">{formatAmount(cell.ckb, '8')} CKB</span>
       </div>
 
       <div className="flex">
