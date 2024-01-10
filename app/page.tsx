@@ -19,6 +19,17 @@ export default function Home() {
     account.addressHash ? ['meta', account.addressHash] : null,
     () => sudtApi.account.meta(account.addressHash),
   )
+  const {
+    data: tokens,
+    error,
+    isLoading,
+  } = useSWR(['tokens', account.addressHash], () =>
+    sudtApi.token.list({ addressHash: account.addressHash }),
+  )
+
+  const managedToken = tokens?.find(
+    (token) => token.owner === account.addressHash,
+  )
 
   return (
     <>
@@ -38,10 +49,20 @@ export default function Home() {
             <img src="/icons/receive.svg" alt="receive" />
             <div className="font-medium text-highlight-color">Receive</div>
           </Link>
-          <Link className="flex flex-col items-center" href="/create">
-            <img src="/icons/create.svg" alt="create" />
-            <div className="font-medium text-highlight-color">Create</div>
-          </Link>
+          {managedToken ? (
+            <Link
+              className="flex flex-col items-center"
+              href={`/token/${managedToken.typeId}/modify`}
+            >
+              <img src="/icons/create.svg" alt="create" />
+              <div className="font-medium text-highlight-color">Manage</div>
+            </Link>
+          ) : (
+            <Link className="flex flex-col items-center" href="/create">
+              <img src="/icons/create.svg" alt="create" />
+              <div className="font-medium text-highlight-color">Create</div>
+            </Link>
+          )}
         </div>
       </div>
 
