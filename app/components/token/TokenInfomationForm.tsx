@@ -24,15 +24,6 @@ export function TokenInfomationForm({
     <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
       <div className="bg-lighter-color p-4 rounded-xl flex flex-col gap-4">
         <div className="flex flex-col">
-          <label>Symbol</label>
-          <Input
-            disabled={readonly}
-            {...register('symbol')}
-            error={errors.symbol !== undefined}
-          />
-        </div>
-
-        <div className="flex flex-col">
           <label>Name</label>
           <Input
             disabled={readonly}
@@ -47,6 +38,15 @@ export function TokenInfomationForm({
             disabled={readonly}
             {...register('email')}
             error={errors.email !== undefined}
+          />
+        </div>
+
+        <div className="flex flex-col">
+          <label>Amount</label>
+          <Input
+            disabled={readonly}
+            {...register('amount')}
+            error={errors.amount !== undefined}
           />
         </div>
 

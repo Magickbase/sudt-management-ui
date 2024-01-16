@@ -18,5 +18,5 @@ export const formatAmount = (amount: string, decimal: string) => {
     return `${amountBigNmber.toFixed(20)}...`
   }
 
-  return amountBigNmber.toFormat(decimalInt)
+  return amountBigNmber.toFormat()
 }

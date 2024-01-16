@@ -4,8 +4,9 @@ import dayjs from 'dayjs'
 import classnames from 'classnames'
 import Link from 'next/link'
 import {
-  type Transaction,
-  type TransactionUdtCell,
+  type ServerHistory,
+  type HistoryCell,
+  type UdtCell,
   TYPE_LABEL_MAP,
 } from '@/app/type'
 import { parseAmount, formatAmount, ellipsisTextMiddle } from '@/app/utils'
@@ -13,11 +14,13 @@ import { useAccount } from '@/app/hooks/useAccount'
 
 interface HistoryItemProps
   extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
-  transaction: Transaction
+  history: ServerHistory
+  typeId?: string
 }
 
 export const HistoryItem: FC<HistoryItemProps> = ({
-  transaction,
+  history,
+  typeId,
   className,
   ...attrs
 }) => {
@@ -26,59 +29,79 @@ export const HistoryItem: FC<HistoryItemProps> = ({
     (a, b) => ({ ...a, [b.address]: true }),
     {},
   )
+  const inputUdts = history.from.filter((cell) => cell.token) as UdtCell[]
 
-  const displayCells =
-    transaction.type === 'from'
-      ? transaction.displayInputs
-      : transaction.displayOutputs
+  const outputUdts = history.to.filter((cell) => cell.token) as UdtCell[]
+
+  const udtMaps = (() => {
+    const input = inputUdts.reduce(
+      (a, b) => ({
+        ...a,
+        [b.token.typeId]: b.token,
+      }),
+      {} as { [typeId: string]: UdtCell['token'] },
+    )
+
+    const output = outputUdts.reduce(
+      (a, b) => ({
+        ...a,
+        [b.token.typeId]: b.token,
+      }),
+      {} as { [typeId: string]: UdtCell['token'] },
+    )
+
+    const allUdtTypeIds = Array.from(
+      new Set([...Object.keys(input), ...Object.keys(output)]),
+    )
+
+    return allUdtTypeIds.reduce(
+      (a, b) => ({
+        ...a,
+        [b]: input[b] ?? output[b],
+      }),
+      {} as { [typeId: string]: UdtCell['token'] },
+    )
+  })()
 
   const bills: {
     ckb: string
-    udts: { symbol: string; amount: string }[]
+    udts: { typeId: string; amount: string }[]
   } = (() => {
-    const selfInputs = transaction.displayInputs.filter(
-      (cell) => addressMap[cell.address],
-    )
-    const selfOutputs = transaction.displayOutputs.filter(
-      (cell) => addressMap[cell.address],
-    )
+    const selfInputs = history.from.filter((cell) => addressMap[cell.address])
+    const selfOutputs = history.to.filter((cell) => addressMap[cell.address])
 
     const ckbInputAmount = selfInputs.reduce((a, b) => {
-      return a.plus(parseAmount(b.capacity, '8'))
+      return a.plus(parseAmount(b.ckb, '8'))
     }, new BigNumber(0))
     const ckbOutputAmount = selfOutputs.reduce((a, b) => {
-      return a.plus(parseAmount(b.capacity, '8'))
+      return a.plus(parseAmount(b.ckb, '8'))
     }, new BigNumber(0))
 
     const udtsInputAmount = (
-      selfInputs.filter(
-        (cell) => cell.cellType === 'udt',
-      ) as TransactionUdtCell[]
+      selfInputs.filter((cell) => typeof cell.token === 'object') as UdtCell[]
     ).reduce(
       (a, b) => ({
         ...a,
-        [b.extraInfo.symbol]: (a[b.extraInfo.symbol] ?? new BigNumber(0)).plus(
-          parseAmount(b.extraInfo.amount, b.extraInfo.decimal),
+        [b.token.typeId]: (a[b.token.typeId] ?? new BigNumber(0)).plus(
+          parseAmount(b.amount, b.token.decimal),
         ),
       }),
-      {} as { [symbol: string]: BigNumber },
+      {} as { [typeId: string]: BigNumber },
     )
 
     const udtsOutputAmount = (
-      selfOutputs.filter(
-        (cell) => cell.cellType === 'udt',
-      ) as TransactionUdtCell[]
+      selfOutputs.filter((cell) => typeof cell.token === 'object') as UdtCell[]
     ).reduce(
       (a, b) => ({
         ...a,
-        [b.extraInfo.symbol]: (a[b.extraInfo.symbol] ?? new BigNumber(0)).plus(
-          parseAmount(b.extraInfo.amount, b.extraInfo.decimal),
+        [b.token.typeId]: (a[b.token.typeId] ?? new BigNumber(0)).plus(
+          parseAmount(b.amount, b.token.decimal),
         ),
       }),
-      {} as { [symbol: string]: BigNumber },
+      {} as { [typeId: string]: BigNumber },
     )
 
-    const allUdtSymbols = Array.from(
+    const allUdtTypeIds = Array.from(
       new Set([
         ...Object.keys(udtsInputAmount),
         ...Object.keys(udtsOutputAmount),
@@ -87,13 +110,48 @@ export const HistoryItem: FC<HistoryItemProps> = ({
 
     return {
       ckb: ckbOutputAmount.minus(ckbInputAmount).toString(),
-      udts: allUdtSymbols.map((symbol) => ({
-        symbol,
-        amount: (udtsOutputAmount[symbol] ?? new BigNumber(0))
-          .minus(udtsInputAmount[symbol] ?? new BigNumber(0))
+      udts: allUdtTypeIds.map((typeId) => ({
+        typeId,
+        amount: (udtsOutputAmount[typeId] ?? new BigNumber(0))
+          .minus(udtsInputAmount[typeId] ?? new BigNumber(0))
           .toString(),
       })),
     }
+  })()
+
+  const historyType: 'from' | 'to' | 'mint' = (() => {
+    if (typeId && bills.udts.find((udt) => udt.typeId === typeId)) {
+      const billItem = bills.udts.find((udt) => udt.typeId === typeId)
+      if (billItem?.amount[0] === '-') {
+        return 'to'
+      }
+
+      const inputUdtCell = history.from.filter(
+        (cell) => typeof cell.token === 'object',
+      ) as UdtCell[]
+
+      if (inputUdtCell.find((cell) => cell.token.typeId === typeId)) {
+        return 'from'
+      }
+
+      return 'mint'
+    }
+
+    if (bills.ckb[0] === '-') {
+      return 'from'
+    }
+
+    return 'to'
+  })()
+
+  const displayCells = (() => {
+    if (historyType === 'from') {
+      return history.from
+    }
+    if (historyType === 'mint') {
+      return history.to.filter((cell) => cell.token?.typeId === typeId)
+    }
+    return history.to
   })()
 
   return (
@@ -106,11 +164,11 @@ export const HistoryItem: FC<HistoryItemProps> = ({
       <div className="flex mb-2">
         <Link
           className="text-primary-color font-medium"
-          href={`/history/${transaction.txHash}`}
+          href={`/history/${history.txHash}`}
         >
-          {ellipsisTextMiddle(transaction.txHash)}
+          {ellipsisTextMiddle(history.txHash)}
         </Link>
-        <span
+        {/* <span
           className={classnames('ml-auto text-xs', {
             'text-orange-400': transaction.txStatus !== 'committed',
           })}
@@ -120,18 +178,18 @@ export const HistoryItem: FC<HistoryItemProps> = ({
                 'YYYY.MM.DD HH:MM:SS',
               )
             : transaction.txStatus}
-        </span>
+        </span> */}
       </div>
       <div className="text-secondary-color">
-        {TYPE_LABEL_MAP[transaction.type]}:{' '}
+        {TYPE_LABEL_MAP[historyType]}:{' '}
         {ellipsisTextMiddle(displayCells[0].address)}{' '}
         {displayCells.length > 1 && `(+${displayCells.length - 1} Addresses)`}
       </div>
       <div className="flex flex-col gap-1 border-t-[1px] border-solid border-secondary-color pt-2 mt-2">
         {bills.udts.map((udt) => (
-          <div className="ml-auto text-highlight-color" key={udt.symbol}>
+          <div className="ml-auto text-highlight-color" key={udt.typeId}>
             {udt.amount[0] === '-' ? '' : '+'}
-            {formatAmount(udt.amount, '0')} {udt.symbol}
+            {udt.amount} {udtMaps[udt.typeId]!.name}
           </div>
         ))}
         <div className="ml-auto text-secondary-color text-xs">

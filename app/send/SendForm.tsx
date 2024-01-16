@@ -8,12 +8,13 @@ import { useAccount } from '../hooks/useAccount'
 import { useMemo } from 'react'
 
 type FormData = {
-  token: string
+  typeId: string
   amount: string
   to: string
 }
 
 interface SendFormProps {
+  defaultValues?: Partial<FormData>
   onSubmit: (data: FormData) => void
 }
 
@@ -23,23 +24,22 @@ export function SendForm(props: SendFormProps) {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<FormData>()
+  } = useForm<FormData>({ defaultValues: props.defaultValues })
 
   const { addressHash } = useAccount()
-  const { data: assets } = useSWR(['assets'], () =>
-    sudtApi.account.listAssets(addressHash),
+  const { data: assets, isLoading } = useSWR(
+    addressHash ? ['assets', addressHash] : null,
+    () => sudtApi.account.listAssets(addressHash),
   )
 
   const assetOptions = useMemo(
     () =>
-      assets?.map((asset) => ({ label: asset.displayName, key: asset.uan })) ||
-      [],
+      assets?.map((asset) => ({
+        label: asset.displayName,
+        key: asset.typeId,
+      })) || [],
     [assets],
   )
-
-  if (!assets) {
-    return null
-  }
 
   return (
     <form
@@ -51,7 +51,7 @@ export function SendForm(props: SendFormProps) {
           <label>Token</label>
 
           <Controller
-            name="token"
+            name="typeId"
             control={control}
             rules={{ required: true }}
             render={({ field }) => <Select {...field} options={assetOptions} />}

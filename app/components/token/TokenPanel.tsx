@@ -10,12 +10,13 @@ import { Toggle } from '@/app/components/switch'
 import { Button } from '@/app/components/button'
 import { sudtApi } from '@/app/components/apiClient'
 import { useAccount } from '@/app/hooks/useAccount'
+import { useLocalStorage } from '@uidotdev/usehooks'
 
 interface TokenPanelProps
   extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {}
 
 export const TokenPanel: FC<TokenPanelProps> = ({ ...attrs }) => {
-  const [autodetect, setAutodetect] = useState(false)
+  const [autodetect, setAutodetect] = useLocalStorage('autodetect', false)
   const { addressHash } = useAccount()
   const {
     data: tokens,
@@ -38,7 +39,11 @@ export const TokenPanel: FC<TokenPanelProps> = ({ ...attrs }) => {
 
         <div className="flex items-center mt-6">
           Autodetect Tokens
-          <Toggle className="ml-auto" enabled={autodetect} />
+          <Toggle
+            className="ml-auto"
+            enabled={autodetect}
+            onChange={(enabled) => setAutodetect(enabled)}
+          />
         </div>
       </div>
     )
