@@ -12,7 +12,7 @@
   "dependencies": {
     "@ckb-connect/walletconnect-dapp-sdk": "^0.0.1-alpha.1",
     "@ckb-lumos/base": "0.20.0",
-    "@headlessui/react": "1.7.17",
+    "@headlessui/react": "1.7.19",
     "@types/node": "20.10.1",
     "@types/react": "18.2.39",
     "@types/react-dom": "18.2.17",
